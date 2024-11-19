@@ -41,19 +41,6 @@
           }
         </div>
 
-        @let passwordRef = editForm.get('password')!;
-        <div class="mb-3">
-          <label class="form-label" for="field_password" jhiTranslate="finalYearProjectApp.appUser.password">Password</label>
-          <input type="text" class="form-control" name="password" id="field_password" data-cy="password" formControlName="password" />
-          @if (passwordRef.invalid && (passwordRef.dirty || passwordRef.touched)) {
-            <div>
-              @if (editForm.get('password')?.errors?.required) {
-                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
-              }
-            </div>
-          }
-        </div>
-
         @let rolesRef = editForm.get('roles')!;
         <div class="mb-3">
           <label class="form-label" for="field_roles" jhiTranslate="finalYearProjectApp.appUser.roles">Roles</label>

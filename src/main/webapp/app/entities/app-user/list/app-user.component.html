@@ -86,14 +86,7 @@
                 }
               </div>
             </th>
-            <th scope="col" jhiSortBy="password">
-              <div class="d-flex">
-                <span jhiTranslate="finalYearProjectApp.appUser.password">Password</span>
-                @if (!currentSearch) {
-                  <fa-icon class="p-1" icon="sort"></fa-icon>
-                }
-              </div>
-            </th>
+
             <th scope="col" jhiSortBy="roles">
               <div class="d-flex">
                 <span jhiTranslate="finalYearProjectApp.appUser.roles">Roles</span>
@@ -126,7 +119,6 @@
               </td>
               <td>{{ appUser.name }}</td>
               <td>{{ appUser.email }}</td>
-              <td>{{ appUser.password }}</td>
               <td>{{ appUser.roles }}</td>
               <td>{{ appUser.points }}</td>
               <td>
