@@ -27,8 +27,8 @@ public class AppUser implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(unique = true) // Ensures each user has one AppUser
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @NotNull

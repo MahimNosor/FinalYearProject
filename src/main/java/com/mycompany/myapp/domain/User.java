@@ -94,8 +94,8 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
-    @OneToOne(mappedBy = "user")
-    private AppUser appUser;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AppUser> appUsers = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -202,12 +202,22 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
         this.authorities = authorities;
     }
 
-    public AppUser getAppUser() {
-        return appUser;
+    public void setAppUsers(Set<AppUser> appUsers) {
+        this.appUsers = appUsers;
     }
 
-    public void setAppUser(AppUser appUser) {
-        this.appUser = appUser;
+    public Set<AppUser> getAppUsers() {
+        return appUsers;
+    }
+
+    public void addAppUser(AppUser appUser) {
+        this.appUsers.add(appUser);
+        appUser.setUser(this);
+    }
+
+    public void removeAppUser(AppUser appUser) {
+        this.appUsers.remove(appUser);
+        appUser.setUser(null);
     }
 
     @Override

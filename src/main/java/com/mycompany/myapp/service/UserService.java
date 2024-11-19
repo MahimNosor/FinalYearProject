@@ -46,18 +46,22 @@ public class UserService {
 
     private final CacheManager cacheManager;
 
+    private final AppUserRepository appUserRepository;
+
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         UserSearchRepository userSearchRepository,
         AuthorityRepository authorityRepository,
-        CacheManager cacheManager
+        CacheManager cacheManager,
+        AppUserRepository appUserRepository
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userSearchRepository = userSearchRepository;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
+        this.appUserRepository = appUserRepository;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -139,6 +143,19 @@ public class UserService {
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         userSearchRepository.save(newUser);
+
+        AppUser appUser = new AppUser();
+        appUser.setUser(newUser); // Associate AppUser with the created User
+        appUser.setUser(newUser); // Associate with the created User
+        appUser.setName(userDTO.getFirstName() + " " + userDTO.getLastName()); // Set name
+        appUser.setEmail(newUser.getEmail()); // Set email
+        appUser.setPassword(encryptedPassword); // Use the already encrypted password
+        appUser.setRoles("ROLE_USER"); // Set default role
+        appUser.setPoints(0); // Initialize points to 0
+        appUserRepository.save(appUser);
+
+        newUser.addAppUser(appUser);
+
         this.clearUserCaches(newUser);
         LOG.debug("Created Information for User: {}", newUser);
         return newUser;
