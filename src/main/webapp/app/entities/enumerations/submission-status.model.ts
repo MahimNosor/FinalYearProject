@@ -1,0 +1,11 @@
+export enum SubmissionStatus {
+  PENDING = 'PENDING',
+
+  SUBMITTED = 'SUBMITTED',
+
+  APPROVED = 'APPROVED',
+
+  REJECTED = 'REJECTED',
+
+  COMPLETED = 'COMPLETED',
+}

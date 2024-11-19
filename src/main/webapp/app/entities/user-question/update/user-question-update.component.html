@@ -1,0 +1,106 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-user-question-heading"
+        data-cy="UserQuestionCreateUpdateHeading"
+        jhiTranslate="finalYearProjectApp.userQuestion.home.createOrEditLabel"
+      >
+        Create or edit a User Question
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="finalYearProjectApp.userQuestion.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_score" jhiTranslate="finalYearProjectApp.userQuestion.score">Score</label>
+          <input type="number" class="form-control" name="score" id="field_score" data-cy="score" formControlName="score" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_submissionDate" jhiTranslate="finalYearProjectApp.userQuestion.submissionDate"
+            >Submission Date</label
+          >
+          <div class="d-flex">
+            <input
+              id="field_submissionDate"
+              data-cy="submissionDate"
+              type="datetime-local"
+              class="form-control"
+              name="submissionDate"
+              formControlName="submissionDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_status" jhiTranslate="finalYearProjectApp.userQuestion.status">Status</label>
+          <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
+            <option [ngValue]="null">{{ 'finalYearProjectApp.SubmissionStatus.null' | translate }}</option>
+            @for (submissionStatus of submissionStatusValues; track $index) {
+              <option [value]="submissionStatus">{{ 'finalYearProjectApp.SubmissionStatus.' + submissionStatus | translate }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_appUser" jhiTranslate="finalYearProjectApp.userQuestion.appUser">App User</label>
+          <select
+            class="form-control"
+            id="field_appUser"
+            data-cy="appUser"
+            name="appUser"
+            formControlName="appUser"
+            [compareWith]="compareAppUser"
+          >
+            <option [ngValue]="null"></option>
+            @for (appUserOption of appUsersSharedCollection; track $index) {
+              <option [ngValue]="appUserOption">{{ appUserOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_question" jhiTranslate="finalYearProjectApp.userQuestion.question">Question</label>
+          <select
+            class="form-control"
+            id="field_question"
+            data-cy="question"
+            name="question"
+            formControlName="question"
+            [compareWith]="compareQuestion"
+          >
+            <option [ngValue]="null"></option>
+            @for (questionOption of questionsSharedCollection; track $index) {
+              <option [ngValue]="questionOption">{{ questionOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

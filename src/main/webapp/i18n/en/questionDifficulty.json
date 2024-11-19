@@ -1,0 +1,10 @@
+{
+  "finalYearProjectApp": {
+    "QuestionDifficulty": {
+      "null": "",
+      "BEGINNER": "BEGINNER",
+      "MEDIUM": "MEDIUM",
+      "HARD": "HARD"
+    }
+  }
+}

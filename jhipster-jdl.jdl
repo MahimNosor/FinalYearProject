@@ -1,0 +1,74 @@
+entity AppUser {
+    name String required,
+    email String required unique,
+    password String required,
+    roles String required, // ROLE_USER, ROLE_TEACHER, ROLE_ADMIN
+    points Integer
+}
+
+entity UserQuestion {
+    score Integer,
+    submissionDate Instant,
+    status SubmissionStatus
+}
+
+entity StudentClass {
+    className String required
+}
+
+entity Question {
+    title String required,
+    difficulty QuestionDifficulty required,
+    description TextBlob required,
+    language ProgrammingLanguage required,
+    testCases TextBlob required,
+    maxScore Integer required
+}
+
+entity TestCase {
+    input String required,
+    expectedOutput String required,
+    description String
+}
+
+enum QuestionDifficulty {
+    BEGINNER,
+    MEDIUM,
+    HARD
+}
+
+enum ProgrammingLanguage {
+    JAVA,
+    PYTHON,
+    JAVASCRIPT,
+    CSHARP,
+    C,
+    CPP
+}
+
+enum SubmissionStatus {
+    PENDING,
+    SUBMITTED,
+    APPROVED,
+    REJECTED,
+    COMPLETED
+}
+
+relationship ManyToMany {
+    AppUser{classes} to StudentClass{users}
+}
+
+relationship ManyToOne {
+    Question{studentClass} to StudentClass
+}
+
+relationship ManyToOne {
+    UserQuestion{appUser} to AppUser
+    UserQuestion{question} to Question
+}
+
+relationship ManyToOne {
+    TestCase{question} to Question
+}
+
+dto * with mapstruct

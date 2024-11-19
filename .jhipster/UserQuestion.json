@@ -1,0 +1,38 @@
+{
+  "annotations": {
+    "changelogDate": "20241119000426"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "score",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "submissionDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "SubmissionStatus",
+      "fieldValues": "PENDING,SUBMITTED,APPROVED,REJECTED,COMPLETED"
+    }
+  ],
+  "name": "UserQuestion",
+  "relationships": [
+    {
+      "otherEntityName": "appUser",
+      "relationshipName": "appUser",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "question",
+      "relationshipName": "question",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}
