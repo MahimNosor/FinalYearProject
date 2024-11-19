@@ -1,6 +1,7 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.repository.AppUserRepository;
+import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.service.AppUserService;
 import com.mycompany.myapp.service.dto.AppUserDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
@@ -38,9 +39,12 @@ public class AppUserResource {
 
     private final AppUserRepository appUserRepository;
 
-    public AppUserResource(AppUserService appUserService, AppUserRepository appUserRepository) {
+    private final UserRepository userRepository;
+
+    public AppUserResource(AppUserService appUserService, AppUserRepository appUserRepository, UserRepository userRepository) {
         this.appUserService = appUserService;
         this.appUserRepository = appUserRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -55,6 +59,9 @@ public class AppUserResource {
         LOG.debug("REST request to save AppUser : {}", appUserDTO);
         if (appUserDTO.getId() != null) {
             throw new BadRequestAlertException("A new appUser cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        if (appUserDTO.getUserId() != null && !userRepository.existsById(appUserDTO.getUserId())) {
+            throw new BadRequestAlertException("Invalid userId", ENTITY_NAME, "usernotfound");
         }
         appUserDTO = appUserService.save(appUserDTO);
         return ResponseEntity.created(new URI("/api/app-users/" + appUserDTO.getId()))
@@ -84,11 +91,12 @@ public class AppUserResource {
         if (!Objects.equals(id, appUserDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
-
         if (!appUserRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
-
+        if (appUserDTO.getUserId() != null && !userRepository.existsById(appUserDTO.getUserId())) {
+            throw new BadRequestAlertException("Invalid userId", ENTITY_NAME, "usernotfound");
+        }
         appUserDTO = appUserService.update(appUserDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, appUserDTO.getId().toString()))
@@ -118,13 +126,13 @@ public class AppUserResource {
         if (!Objects.equals(id, appUserDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
-
         if (!appUserRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
-
+        if (appUserDTO.getUserId() != null && !userRepository.existsById(appUserDTO.getUserId())) {
+            throw new BadRequestAlertException("Invalid userId", ENTITY_NAME, "usernotfound");
+        }
         Optional<AppUserDTO> result = appUserService.partialUpdate(appUserDTO);
-
         return ResponseUtil.wrapOrNotFound(
             result,
             HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, appUserDTO.getId().toString())

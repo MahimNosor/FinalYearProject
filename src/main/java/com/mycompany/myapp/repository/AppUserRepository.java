@@ -27,4 +27,7 @@ public interface AppUserRepository extends AppUserRepositoryWithBagRelationships
     default Page<AppUser> findAllWithEagerRelationships(Pageable pageable) {
         return this.fetchBagRelationships(this.findAll(pageable));
     }
+
+    @EntityGraph(attributePaths = "user")
+    Optional<AppUser> findOneByUserId(Long userId);
 }

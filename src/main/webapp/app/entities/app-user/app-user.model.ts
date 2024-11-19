@@ -8,6 +8,7 @@ export interface IAppUser {
   roles?: string | null;
   points?: number | null;
   classes?: Pick<IStudentClass, 'id'>[] | null;
+  userId?: number;
 }
 
 export type NewAppUser = Omit<IAppUser, 'id'> & { id: null };

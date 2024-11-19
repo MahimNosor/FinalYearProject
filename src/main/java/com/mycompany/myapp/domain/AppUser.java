@@ -27,6 +27,10 @@ public class AppUser implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    @OneToOne
+    @JoinColumn(unique = true) // Ensures each user has one AppUser
+    private User user;
+
     @NotNull
     @Column(name = "name", nullable = false)
     @org.springframework.data.elasticsearch.annotations.Field(type = org.springframework.data.elasticsearch.annotations.FieldType.Text)
@@ -74,6 +78,15 @@ public class AppUser implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    // Other fields and getters/setters
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getName() {

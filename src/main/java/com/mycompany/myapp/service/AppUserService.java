@@ -2,6 +2,7 @@ package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.AppUser;
 import com.mycompany.myapp.repository.AppUserRepository;
+import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.repository.search.AppUserSearchRepository;
 import com.mycompany.myapp.service.dto.AppUserDTO;
 import com.mycompany.myapp.service.mapper.AppUserMapper;
@@ -32,14 +33,18 @@ public class AppUserService {
 
     private final AppUserSearchRepository appUserSearchRepository;
 
+    private final UserRepository userRepository;
+
     public AppUserService(
         AppUserRepository appUserRepository,
         AppUserMapper appUserMapper,
-        AppUserSearchRepository appUserSearchRepository
+        AppUserSearchRepository appUserSearchRepository,
+        UserRepository userRepository
     ) {
         this.appUserRepository = appUserRepository;
         this.appUserMapper = appUserMapper;
         this.appUserSearchRepository = appUserSearchRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -51,6 +56,12 @@ public class AppUserService {
     public AppUserDTO save(AppUserDTO appUserDTO) {
         LOG.debug("Request to save AppUser : {}", appUserDTO);
         AppUser appUser = appUserMapper.toEntity(appUserDTO);
+
+        // Link the AppUser to the JHipster User
+        if (appUserDTO.getUserId() != null) {
+            userRepository.findById(appUserDTO.getUserId()).ifPresent(appUser::setUser);
+        }
+
         appUser = appUserRepository.save(appUser);
         appUserSearchRepository.index(appUser);
         return appUserMapper.toDto(appUser);
@@ -65,6 +76,12 @@ public class AppUserService {
     public AppUserDTO update(AppUserDTO appUserDTO) {
         LOG.debug("Request to update AppUser : {}", appUserDTO);
         AppUser appUser = appUserMapper.toEntity(appUserDTO);
+
+        // Link the AppUser to the JHipster User
+        if (appUserDTO.getUserId() != null) {
+            userRepository.findById(appUserDTO.getUserId()).ifPresent(appUser::setUser);
+        }
+
         appUser = appUserRepository.save(appUser);
         appUserSearchRepository.index(appUser);
         return appUserMapper.toDto(appUser);
@@ -151,5 +168,16 @@ public class AppUserService {
         } catch (RuntimeException e) {
             throw e;
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<AppUserDTO> findOneWithUser(Long id) {
+        LOG.debug("Request to get AppUser with User : {}", id);
+        return appUserRepository
+            .findById(id)
+            .map(appUser -> {
+                appUser.setUser(userRepository.findById(appUser.getUser().getId()).orElse(null));
+                return appUserMapper.toDto(appUser);
+            });
     }
 }

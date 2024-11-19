@@ -28,6 +28,8 @@ public class AppUserDTO implements Serializable {
 
     private Integer points;
 
+    private Long userId; // Linking to JHipster User
+
     private Set<StudentClassDTO> classes = new HashSet<>();
 
     public Long getId() {
@@ -86,6 +88,14 @@ public class AppUserDTO implements Serializable {
         this.classes = classes;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -117,6 +127,7 @@ public class AppUserDTO implements Serializable {
             ", password='" + getPassword() + "'" +
             ", roles='" + getRoles() + "'" +
             ", points=" + getPoints() +
+            ", userId=" + getUserId() + // Added userId to toString
             ", classes=" + getClasses() +
             "}";
     }

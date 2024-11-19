@@ -33,6 +33,18 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="add-user-relation-to-appuser" author="jhipster">
+    <addColumn tableName="app_user">
+        <column name="user_id" type="bigint"/>
+    </addColumn>
+    <addForeignKeyConstraint baseColumnNames="user_id"
+                             baseTableName="app_user"
+                             constraintName="fk_appuser_user"
+                             referencedColumnNames="id"
+                             referencedTableName="jhi_user"/>
+    </changeSet>
+
+
     <changeSet id="20241119000425-1-relations" author="jhipster">
 
         <createTable tableName="rel_app_user__classes">
