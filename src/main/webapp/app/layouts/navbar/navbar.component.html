@@ -27,6 +27,12 @@
             </span>
           </a>
         </li>
+        <li *jhiHasAnyAuthority="'ROLE_TEACHER'" class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="nav-link" routerLink="/teacher-dashboard" (click)="collapseNavbar()">
+            <fa-icon icon="chalkboard-teacher"></fa-icon>
+            <span>Teacher Dashboard</span>
+          </a>
+        </li>
         <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
         @if (account() !== null) {
           <li
@@ -55,6 +61,7 @@
                   <span jhiTranslate="global.menu.entities.appUser">App User</span>
                 </a>
               </li>
+
               <li>
                 <a
                   class="dropdown-item"

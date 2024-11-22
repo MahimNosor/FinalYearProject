@@ -1,10 +1,15 @@
 package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.AppUser;
+import com.mycompany.myapp.domain.enumeration.SubmissionStatus;
 import com.mycompany.myapp.repository.AppUserRepository;
+import com.mycompany.myapp.repository.QuestionRepository;
+import com.mycompany.myapp.repository.StudentClassRepository;
+import com.mycompany.myapp.repository.UserQuestionRepository;
 import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.repository.search.AppUserSearchRepository;
 import com.mycompany.myapp.service.dto.AppUserDTO;
+import com.mycompany.myapp.service.dto.TeacherDashboardDTO;
 import com.mycompany.myapp.service.mapper.AppUserMapper;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,16 +41,26 @@ public class AppUserService {
 
     private final UserRepository userRepository;
 
+    private final StudentClassRepository studentClassRepository;
+    private final QuestionRepository questionRepository;
+    private final UserQuestionRepository userQuestionRepository;
+
     public AppUserService(
         AppUserRepository appUserRepository,
         AppUserMapper appUserMapper,
         AppUserSearchRepository appUserSearchRepository,
-        UserRepository userRepository
+        UserRepository userRepository,
+        StudentClassRepository studentClassRepository,
+        QuestionRepository questionRepository,
+        UserQuestionRepository userQuestionRepository
     ) {
         this.appUserRepository = appUserRepository;
         this.appUserMapper = appUserMapper;
         this.appUserSearchRepository = appUserSearchRepository;
         this.userRepository = userRepository;
+        this.studentClassRepository = studentClassRepository;
+        this.questionRepository = questionRepository;
+        this.userQuestionRepository = userQuestionRepository;
     }
 
     /**
@@ -179,5 +195,32 @@ public class AppUserService {
                 appUser.setUser(userRepository.findById(appUser.getUser().getId()).orElse(null));
                 return appUserMapper.toDto(appUser);
             });
+    }
+
+    public TeacherDashboardDTO getDashboardStats(Authentication authentication) {
+        LOG.info("Fetching teacher dashboard stats for user: {}", authentication.getName());
+
+        // Ensure the user has ROLE_TEACHER
+        boolean isTeacher = authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_TEACHER"));
+        if (!isTeacher) {
+            LOG.error("Unauthorized access attempt by user: {}", authentication.getName());
+            throw new RuntimeException("Unauthorized access");
+        }
+
+        // Extract teacher ID from authenticated user
+        Long teacherId = appUserRepository
+            .findByUser_Login(authentication.getName())
+            .map(AppUser::getId)
+            .orElseThrow(() -> new RuntimeException("Teacher not found"));
+        LOG.info("Teacher ID found: {}", teacherId);
+
+        // Fetch stats
+        TeacherDashboardDTO dashboard = new TeacherDashboardDTO();
+        dashboard.setTotalClasses(studentClassRepository.countByTeacherId(teacherId));
+        dashboard.setActiveQuestions(questionRepository.countByTeacherId(teacherId));
+        dashboard.setPendingSubmissions(userQuestionRepository.countByTeacherIdAndStatus(teacherId, SubmissionStatus.PENDING));
+
+        LOG.info("Dashboard stats collected: {}", dashboard);
+        return dashboard;
     }
 }
