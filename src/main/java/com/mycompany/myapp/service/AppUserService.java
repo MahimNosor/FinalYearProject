@@ -17,6 +17,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +46,8 @@ public class AppUserService {
     private final StudentClassRepository studentClassRepository;
     private final QuestionRepository questionRepository;
     private final UserQuestionRepository userQuestionRepository;
+
+    private final Logger log = LoggerFactory.getLogger(AppUserService.class);
 
     public AppUserService(
         AppUserRepository appUserRepository,
@@ -222,5 +226,16 @@ public class AppUserService {
 
         LOG.info("Dashboard stats collected: {}", dashboard);
         return dashboard;
+    }
+
+    @Transactional(readOnly = true)
+    public List<AppUserDTO> findAllSortedByPoints() {
+        log.debug("Request to get all AppUsers sorted by points");
+        return appUserRepository.findAllByOrderByPointsDesc().stream().map(appUserMapper::toDto).collect(Collectors.toList());
+    }
+
+    public Optional<AppUser> getCurrentUser(Authentication authentication) {
+        String login = authentication.getName();
+        return appUserRepository.findByUser_Login(login);
     }
 }

@@ -86,4 +86,7 @@ export class AppUserService {
   getDashboardStats(): Observable<any> {
     return this.http.get(`${this.apiUrl}/dashboard`);
   }
+  getLeaderboard(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.resourceUrl}/leaderboard`);
+  }
 }

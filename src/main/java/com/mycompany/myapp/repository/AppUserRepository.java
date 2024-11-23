@@ -34,4 +34,7 @@ public interface AppUserRepository extends AppUserRepositoryWithBagRelationships
 
     @Query("SELECT au FROM AppUser au JOIN au.user u WHERE u.login = :login")
     Optional<AppUser> findByUser_Login(@Param("login") String login);
+
+    @Query("SELECT a FROM AppUser a ORDER BY a.points DESC")
+    List<AppUser> findAllByOrderByPointsDesc();
 }

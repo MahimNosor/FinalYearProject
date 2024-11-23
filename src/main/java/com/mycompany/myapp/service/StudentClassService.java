@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,8 @@ public class StudentClassService {
     private final StudentClassMapper studentClassMapper;
 
     private final StudentClassSearchRepository studentClassSearchRepository;
+
+    private final Logger log = LoggerFactory.getLogger(StudentClassService.class);
 
     public StudentClassService(
         StudentClassRepository studentClassRepository,
@@ -142,5 +146,11 @@ public class StudentClassService {
         } catch (RuntimeException e) {
             throw e;
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<StudentClassDTO> findClassesByStudentId(Long studentId) {
+        log.debug("Request to get classes for student ID: {}", studentId);
+        return studentClassRepository.findByUsers_Id(studentId).stream().map(studentClassMapper::toDto).collect(Collectors.toList());
     }
 }

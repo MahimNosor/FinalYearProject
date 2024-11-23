@@ -30,6 +30,8 @@ public class AppUserDTO implements Serializable {
 
     private Long userId; // Linking to JHipster User
 
+    private String login;
+
     private Set<StudentClassDTO> classes = new HashSet<>();
 
     public Long getId() {
@@ -94,6 +96,14 @@ public class AppUserDTO implements Serializable {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     @Override

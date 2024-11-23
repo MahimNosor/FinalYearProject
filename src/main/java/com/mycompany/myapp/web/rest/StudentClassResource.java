@@ -10,9 +10,12 @@ import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +40,7 @@ public class StudentClassResource {
     private final StudentClassService studentClassService;
 
     private final StudentClassRepository studentClassRepository;
+    private final Logger log = LoggerFactory.getLogger(StudentClassResource.class);
 
     public StudentClassResource(StudentClassService studentClassService, StudentClassRepository studentClassRepository) {
         this.studentClassService = studentClassService;
@@ -186,5 +190,11 @@ public class StudentClassResource {
         } catch (RuntimeException e) {
             throw ElasticsearchExceptionMapper.mapException(e);
         }
+    }
+
+    @GetMapping("/student-classes/{studentId}")
+    public List<StudentClassDTO> getStudentClasses(@PathVariable Long studentId) {
+        log.debug("REST request to get classes for student: {}", studentId);
+        return studentClassService.findClassesByStudentId(studentId);
     }
 }

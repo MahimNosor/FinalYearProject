@@ -1,10 +1,12 @@
 package com.mycompany.myapp.web.rest;
 
+import com.mycompany.myapp.domain.AppUser;
 import com.mycompany.myapp.repository.AppUserRepository;
 import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.service.AppUserService;
 import com.mycompany.myapp.service.dto.AppUserDTO;
 import com.mycompany.myapp.service.dto.TeacherDashboardDTO;
+import com.mycompany.myapp.service.mapper.AppUserMapper;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import com.mycompany.myapp.web.rest.errors.ElasticsearchExceptionMapper;
 import jakarta.validation.Valid;
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -43,10 +47,18 @@ public class AppUserResource {
 
     private final UserRepository userRepository;
 
-    public AppUserResource(AppUserService appUserService, AppUserRepository appUserRepository, UserRepository userRepository) {
+    private final AppUserMapper appUserMapper;
+
+    public AppUserResource(
+        AppUserService appUserService,
+        AppUserRepository appUserRepository,
+        UserRepository userRepository,
+        AppUserMapper appUserMapper // Include appUserMapper in the constructor
+    ) {
         this.appUserService = appUserService;
         this.appUserRepository = appUserRepository;
         this.userRepository = userRepository;
+        this.appUserMapper = appUserMapper; // Initialize appUserMapper properly
     }
 
     /**
@@ -201,5 +213,22 @@ public class AppUserResource {
     @GetMapping("/dashboard")
     public TeacherDashboardDTO getDashboard(Authentication authentication) {
         return appUserService.getDashboardStats(authentication);
+    }
+
+    @GetMapping("/leaderboard")
+    public List<AppUserDTO> getLeaderboard() {
+        LOG.debug("REST request to get leaderboard");
+        return appUserService.findAllSortedByPoints();
+    }
+
+    @GetMapping("/account")
+    public ResponseEntity<AppUserDTO> getAccount(Authentication authentication) {
+        Optional<AppUser> user = appUserService.getCurrentUser(authentication);
+        if (user.isPresent()) {
+            AppUserDTO appUserDTO = appUserMapper.toDto(user.get());
+            return ResponseEntity.ok(appUserDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
