@@ -20,7 +20,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export default class HomeComponent implements OnInit, OnDestroy {
   // Public properties
-  account = signal<Account | null>(null);
+  account: Account | null = null;
   user: any;
   leaderboard: any[] = [];
   studentClasses: any[] = [];
@@ -43,7 +43,7 @@ export default class HomeComponent implements OnInit, OnDestroy {
       .getAuthenticationState()
       .pipe(takeUntil(this.destroy$))
       .subscribe(account => {
-        this.account.set(account);
+        this.account = account;
 
         if (account) {
           // Determine user roles
@@ -84,7 +84,7 @@ export default class HomeComponent implements OnInit, OnDestroy {
 
   fetchAccountDetails(): void {
     this.http.get<any>('/api/app-users/account').subscribe(accountData => {
-      this.account.set(accountData);
+      this.account = accountData;
       this.user = accountData;
     });
   }

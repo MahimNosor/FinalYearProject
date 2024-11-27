@@ -3,9 +3,9 @@
     <span class="hipster img-fluid rounded"></span>
   </div>
 
-  <div class="col-md-9">
+  <div class="col-md-6">
     <!-- Default Welcome Message for Non-Logged-In Users -->
-    <div *ngIf="!account()">
+    <div *ngIf="!account">
       <h1 class="display-4"><span>Welcome to ClassCode!</span></h1>
       <p class="lead">
         ClassCode is a gamified learning platform designed to help students enhance their programming skills through engaging challenges and
@@ -18,8 +18,8 @@
         <a class="alert-link" (click)="login()">sign in</a>,
         <span>
           you can use the default accounts:<br />- Administrator (login="admin" and password="admin") <br />- User (login="user" and
-          password="user").</span
-        >
+          password="user").
+        </span>
       </div>
 
       <div class="alert alert-warning">
@@ -30,32 +30,36 @@
     </div>
 
     <!-- Content for Logged-In Users -->
-    <div *ngIf="account()">
-      <p class="lead" style="font-size: 1.5rem">Hello, {{ user?.login }}!</p>
-      <!-- Increased font size -->
+    <div *ngIf="account">
+      <p class="lead" style="font-size: 2.5rem; font-weight: bold">Hello, {{ account.login }}!</p>
+    </div>
 
-      <!-- Global Leaderboard -->
-      <div *ngIf="leaderboard && leaderboard.length > 0">
-        <h3>Global Leaderboard</h3>
-        <ul>
-          <li *ngFor="let user of leaderboard">{{ user.name }}: {{ user.points }} points</li>
-        </ul>
-      </div>
+    <!-- Student-Specific Content -->
+    <div *ngIf="isStudent">
+      <h3>Your Classes</h3>
+      <ul>
+        <li *ngFor="let classItem of studentClasses">
+          <a [routerLink]="['/class', classItem.id]">{{ classItem.className }}</a>
+        </li>
+      </ul>
+    </div>
 
-      <!-- Student-Specific Content -->
-      <div *ngIf="isStudent">
-        <h3>Your Classes</h3>
-        <ul>
-          <li *ngFor="let classItem of studentClasses">
-            <a [routerLink]="['/class', classItem.id]">{{ classItem.className }}</a>
-          </li>
-        </ul>
-      </div>
+    <!-- Teacher-Specific Note -->
+    <div *ngIf="isTeacher">
+      <p>You can manage your classes and assignments in the Teacher Dashboard, accessible via the navigation bar.</p>
+    </div>
+  </div>
 
-      <!-- Teacher-Specific Note -->
-      <div *ngIf="isTeacher">
-        <p>You can manage your classes and assignments in the Teacher Dashboard, accessible via the navigation bar.</p>
-      </div>
+  <!-- Leaderboard Section to the Right -->
+  <div class="col-md-3 d-flex justify-content-end">
+    <div *ngIf="leaderboard && leaderboard.length > 0" class="leaderboard-box">
+      <h3>Global Leaderboard</h3>
+      <ul>
+        <li *ngFor="let user of leaderboard" class="leaderboard-item">
+          <strong>{{ user.name }}</strong
+          >: {{ user.points }} points
+        </li>
+      </ul>
     </div>
   </div>
 </div>

@@ -21,3 +21,21 @@ Main page styles
     background-size: contain;
   }
 }
+
+.leaderboard-box {
+  border: 1px solid #ddd; // Light border for the box
+  border-radius: 8px; // Rounded corners for better visual appeal
+  padding: 16px; // Padding inside the box to give space for content
+  background-color: #f9f9f9; // Light background color to differentiate
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Soft shadow to lift the box off the page
+  margin-top: 24px; // Top margin to give spacing from other content
+}
+
+.leaderboard-item {
+  padding: 8px 0; // Spacing between leaderboard items
+  border-bottom: 1px solid #e0e0e0; // Separator between items
+}
+
+.leaderboard-item:last-child {
+  border-bottom: none; // Remove the bottom border for the last item
+}

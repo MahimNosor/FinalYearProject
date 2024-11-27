@@ -16,6 +16,7 @@ import org.mapstruct.*;
 public interface AppUserMapper extends EntityMapper<AppUserDTO, AppUser> {
     // Mapping AppUser to DTO
     @Mapping(source = "user.id", target = "userId") // Map User to userId in DTO
+    @Mapping(source = "user.login", target = "login") // NEW: Map User login to login in DTO
     @Mapping(target = "classes", source = "classes", qualifiedByName = "studentClassIdSet") // Map StudentClass to DTO
     AppUserDTO toDto(AppUser appUser);
 
