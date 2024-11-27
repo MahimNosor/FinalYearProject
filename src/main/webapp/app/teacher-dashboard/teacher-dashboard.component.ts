@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AppUserService } from '../entities/app-user/service/app-user.service';
 import { TeacherDashboardService } from 'app/services/teacher-dashboard.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'jhi-teacher-dashboard',
@@ -16,10 +17,17 @@ export class TeacherDashboardComponent implements OnInit {
     pendingSubmissions: 0,
   };
 
-  constructor(private appUserService: AppUserService) {}
+  constructor(
+    private appUserService: AppUserService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.loadDashboardStats();
+  }
+
+  navigateToQuestionManagement(): void {
+    this.router.navigate(['/teacher/questions']);
   }
 
   private loadDashboardStats(): void {
