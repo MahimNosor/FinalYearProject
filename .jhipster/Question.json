@@ -1,0 +1,51 @@
+{
+  "annotations": {
+    "changelogDate": "20241119000428"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "difficulty",
+      "fieldType": "QuestionDifficulty",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "BEGINNER,MEDIUM,HARD"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "TextBlob",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "language",
+      "fieldType": "ProgrammingLanguage",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "JAVA,PYTHON,JAVASCRIPT,CSHARP,C,CPP"
+    },
+    {
+      "fieldName": "testCases",
+      "fieldType": "TextBlob",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "maxScore",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "Question",
+  "relationships": [
+    {
+      "otherEntityName": "studentClass",
+      "relationshipName": "studentClass",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}

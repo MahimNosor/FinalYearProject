@@ -1,0 +1,64 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (userQuestion(); as userQuestionRef) {
+      <div>
+        <h2 data-cy="userQuestionDetailsHeading">
+          <span jhiTranslate="finalYearProjectApp.userQuestion.detail.title">User Question</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ userQuestionRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.userQuestion.score">Score</span></dt>
+          <dd>
+            <span>{{ userQuestionRef.score }}</span>
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.userQuestion.submissionDate">Submission Date</span></dt>
+          <dd>
+            <span>{{ userQuestionRef.submissionDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.userQuestion.status">Status</span></dt>
+          <dd>
+            <span [jhiTranslate]="'finalYearProjectApp.SubmissionStatus.' + (userQuestionRef.status ?? 'null')">{{
+              { null: '', PENDING: 'PENDING', SUBMITTED: 'SUBMITTED', APPROVED: 'APPROVED', REJECTED: 'REJECTED', COMPLETED: 'COMPLETED' }[
+                userQuestionRef.status ?? 'null'
+              ]
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.userQuestion.appUser">App User</span></dt>
+          <dd>
+            @if (userQuestion()!.appUser) {
+              <div>
+                <a [routerLink]="['/app-user', userQuestion()!.appUser?.id, 'view']">{{ userQuestionRef.appUser?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.userQuestion.question">Question</span></dt>
+          <dd>
+            @if (userQuestion()!.question) {
+              <div>
+                <a [routerLink]="['/question', userQuestion()!.question?.id, 'view']">{{ userQuestionRef.question?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/user-question', userQuestionRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>
