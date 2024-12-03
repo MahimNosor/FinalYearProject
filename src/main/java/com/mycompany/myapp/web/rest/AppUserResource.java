@@ -223,12 +223,10 @@ public class AppUserResource {
 
     @GetMapping("/account")
     public ResponseEntity<AppUserDTO> getAccount(Authentication authentication) {
-        Optional<AppUser> user = appUserService.getCurrentUser(authentication);
-        if (user.isPresent()) {
-            AppUserDTO appUserDTO = appUserMapper.toDto(user.get());
-            return ResponseEntity.ok(appUserDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        AppUser appUser = appUserService
+            .getCurrentUser(authentication)
+            .orElseThrow(() -> new BadRequestAlertException("User not found", ENTITY_NAME, "usernotfound"));
+        AppUserDTO appUserDTO = appUserMapper.toDto(appUser);
+        return ResponseEntity.ok(appUserDTO);
     }
 }

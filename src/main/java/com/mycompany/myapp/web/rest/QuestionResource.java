@@ -1,5 +1,6 @@
 package com.mycompany.myapp.web.rest;
 
+import com.mycompany.myapp.domain.Question;
 import com.mycompany.myapp.repository.QuestionRepository;
 import com.mycompany.myapp.service.QuestionService;
 import com.mycompany.myapp.service.dto.QuestionDTO;
@@ -185,5 +186,13 @@ public class QuestionResource {
         } catch (RuntimeException e) {
             throw ElasticsearchExceptionMapper.mapException(e);
         }
+    }
+
+    @GetMapping("/teacher/questions")
+    public ResponseEntity<List<QuestionDTO>> getTeacherQuestions() {
+        LOG.debug("REST request to get all Questions for the logged-in teacher");
+
+        List<QuestionDTO> questions = questionService.findAllForLoggedInTeacher();
+        return ResponseEntity.ok(questions);
     }
 }

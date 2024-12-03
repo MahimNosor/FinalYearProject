@@ -63,7 +63,19 @@ public class Question implements Serializable {
     @JsonIgnoreProperties(value = { "users" }, allowSetters = true)
     private StudentClass studentClass;
 
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private AppUser teacher;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
+
+    public AppUser getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(AppUser teacher) {
+        this.teacher = teacher;
+    }
 
     public Long getId() {
         return this.id;

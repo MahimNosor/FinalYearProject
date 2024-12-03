@@ -30,7 +30,6 @@ export class TestCaseUpdateComponent implements OnInit {
   protected questionService = inject(QuestionService);
   protected activatedRoute = inject(ActivatedRoute);
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: TestCaseFormGroup = this.testCaseFormService.createTestCaseFormGroup();
 
   compareQuestion = (o1: IQuestion | null, o2: IQuestion | null): boolean => this.questionService.compareQuestion(o1, o2);

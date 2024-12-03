@@ -1,8 +1,14 @@
 package com.mycompany.myapp.service;
 
+import com.mycompany.myapp.domain.AppUser;
 import com.mycompany.myapp.domain.Question;
+import com.mycompany.myapp.domain.User;
+import com.mycompany.myapp.repository.AppUserRepository;
 import com.mycompany.myapp.repository.QuestionRepository;
+import com.mycompany.myapp.repository.UserRepository;
+import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.repository.search.QuestionSearchRepository;
+import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.dto.QuestionDTO;
 import com.mycompany.myapp.service.mapper.QuestionMapper;
 import java.util.LinkedList;
@@ -12,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class QuestionService {
+
+    @Autowired
+    private AppUserRepository appUserRepository;
+
+    private UserRepository userRepository;
 
     private static final Logger LOG = LoggerFactory.getLogger(QuestionService.class);
 
@@ -140,5 +152,53 @@ public class QuestionService {
         } catch (RuntimeException e) {
             throw e;
         }
+    }
+
+    public List<QuestionDTO> findAllForLoggedInTeacher() {
+        LOG.debug("Request to get all Questions for the logged-in teacher");
+
+        // Step 1: Get the current logged-in user's login
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("User not logged in"));
+
+        // Step 2: Find the User entity by login
+        User currentUser = userRepository
+            .findOneByLogin(currentUserLogin)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Step 3: Find the associated AppUser entity using the login
+        AppUser teacher = appUserRepository
+            .findByUser_Login(currentUserLogin)
+            .orElseThrow(() -> new IllegalArgumentException("AppUser not found"));
+
+        // Step 4: Use QuestionRepository to find questions by teacher ID
+        List<Question> questions = questionRepository.findByTeacherId(teacher.getId());
+
+        // Step 5: Map the list of Question entities to a list of QuestionDTO
+        return questions.stream().map(questionMapper::toDto).collect(Collectors.toList());
+    }
+
+    public QuestionDTO createQuestion(QuestionDTO questionDTO) {
+        LOG.debug("Request to create Question : {}", questionDTO);
+
+        // Step 1: Get the current logged-in user's login
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new IllegalArgumentException("User not logged in"));
+
+        // Step 2: Find the User entity by login
+        User currentUser = userRepository
+            .findOneByLogin(currentUserLogin)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Step 3: Find the associated AppUser entity using the login
+        AppUser teacher = appUserRepository
+            .findByUser_Login(currentUserLogin)
+            .orElseThrow(() -> new IllegalArgumentException("AppUser not found"));
+
+        // Step 4: Map the QuestionDTO to Question entity and set the teacher
+        Question question = questionMapper.toEntity(questionDTO);
+        question.setTeacher(teacher);
+        question = questionRepository.save(question);
+
+        // Step 5: Return the saved question as a DTO
+        return questionMapper.toDto(question);
     }
 }

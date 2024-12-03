@@ -30,7 +30,6 @@ export class StudentClassUpdateComponent implements OnInit {
   protected appUserService = inject(AppUserService);
   protected activatedRoute = inject(ActivatedRoute);
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: StudentClassFormGroup = this.studentClassFormService.createStudentClassFormGroup();
 
   compareAppUser = (o1: IAppUser | null, o2: IAppUser | null): boolean => this.appUserService.compareAppUser(o1, o2);

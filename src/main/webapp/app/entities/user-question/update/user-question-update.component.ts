@@ -36,7 +36,6 @@ export class UserQuestionUpdateComponent implements OnInit {
   protected questionService = inject(QuestionService);
   protected activatedRoute = inject(ActivatedRoute);
 
-  // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: UserQuestionFormGroup = this.userQuestionFormService.createUserQuestionFormGroup();
 
   compareAppUser = (o1: IAppUser | null, o2: IAppUser | null): boolean => this.appUserService.compareAppUser(o1, o2);

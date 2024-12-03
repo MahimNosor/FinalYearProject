@@ -28,7 +28,6 @@ export class TrackerService {
   setup(): void {
     this.rxStomp = new RxStomp();
     this.rxStomp.configure({
-      // eslint-disable-next-line no-console
       debug: (msg: string): void => console.log(new Date(), msg),
     });
 
@@ -59,13 +58,11 @@ export class TrackerService {
   }
 
   public subscribe(observer: Partial<Observer<TrackerActivity>>): Subscription {
-    return (
-      this.stomp
-        .watch(DESTINATION_TRACKER)
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        .pipe(map(imessage => JSON.parse(imessage.body)))
-        .subscribe(observer)
-    );
+    return this.stomp
+      .watch(DESTINATION_TRACKER)
+
+      .pipe(map(imessage => JSON.parse(imessage.body)))
+      .subscribe(observer);
   }
 
   sendActivity(): void {
