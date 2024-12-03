@@ -25,6 +25,7 @@ export class AuthorityUpdateComponent implements OnInit {
   protected authorityFormService = inject(AuthorityFormService);
   protected activatedRoute = inject(ActivatedRoute);
 
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: AuthorityFormGroup = this.authorityFormService.createAuthorityFormGroup();
 
   ngOnInit(): void {

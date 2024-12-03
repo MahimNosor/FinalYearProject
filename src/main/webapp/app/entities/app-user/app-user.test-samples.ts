@@ -1,35 +1,36 @@
 import { IAppUser, NewAppUser } from './app-user.model';
 
 export const sampleWithRequiredData: IAppUser = {
-  id: 21991,
-  name: 'although yahoo garage',
-  email: 'Rogelio.Daugherty@hotmail.com',
-  password: 'opera informal lest',
-  roles: 'duh faraway',
+  id: 934,
+  name: 'eek daughter',
+  email: 'Sadie.Goyette55@gmail.com',
+  password: 'yuck ick woot',
+  roles: 'oof inasmuch boring',
 };
 
 export const sampleWithPartialData: IAppUser = {
-  id: 1230,
-  name: 'bah',
-  email: 'Tommie.Senger25@hotmail.com',
-  password: 'down',
-  roles: 'outside promptly',
+  id: 30122,
+  name: 'capitalise',
+  email: 'Christa_Roberts25@gmail.com',
+  password: 'junior woot',
+  roles: 'discourse lieu astride',
+  points: 14323,
 };
 
 export const sampleWithFullData: IAppUser = {
-  id: 19451,
-  name: 'which',
-  email: 'Karelle.Padberg@yahoo.com',
-  password: 'near thoughtfully',
-  roles: 'phew into',
-  points: 8690,
+  id: 3428,
+  name: 'however',
+  email: 'Ashton_Gibson@yahoo.com',
+  password: 'kindly',
+  roles: 'innocently hungry',
+  points: 4530,
 };
 
 export const sampleWithNewData: NewAppUser = {
-  name: 'space pillory',
-  email: 'Justice40@gmail.com',
-  password: 'far-flung given',
-  roles: 'plus',
+  name: 'hippodrome not modulo',
+  email: 'Dixie72@gmail.com',
+  password: 'forenenst hexagon',
+  roles: 'shocked always',
   id: null,
 };
 

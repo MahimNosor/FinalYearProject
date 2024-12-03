@@ -1,6 +1,5 @@
 package com.mycompany.myapp.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -28,10 +27,6 @@ public class AppUser implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     @NotNull
     @Column(name = "name", nullable = false)
     @org.springframework.data.elasticsearch.annotations.Field(type = org.springframework.data.elasticsearch.annotations.FieldType.Text)
@@ -43,7 +38,6 @@ public class AppUser implements Serializable {
     private String email;
 
     @NotNull
-    @JsonIgnore
     @Column(name = "password", nullable = false)
     @org.springframework.data.elasticsearch.annotations.Field(type = org.springframework.data.elasticsearch.annotations.FieldType.Text)
     private String password;
@@ -80,15 +74,6 @@ public class AppUser implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    // Other fields and getters/setters
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public String getName() {

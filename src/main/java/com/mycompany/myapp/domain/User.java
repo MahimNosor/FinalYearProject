@@ -60,7 +60,7 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 
     @NotNull
     @Column(nullable = false)
-    private boolean activated = true;
+    private boolean activated = false;
 
     @Size(min = 2, max = 10)
     @Column(name = "lang_key", length = 10)
@@ -93,9 +93,6 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<AppUser> appUsers = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -200,24 +197,6 @@ public class User extends AbstractAuditingEntity<Long> implements Serializable {
 
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
-    }
-
-    public void setAppUsers(Set<AppUser> appUsers) {
-        this.appUsers = appUsers;
-    }
-
-    public Set<AppUser> getAppUsers() {
-        return appUsers;
-    }
-
-    public void addAppUser(AppUser appUser) {
-        this.appUsers.add(appUser);
-        appUser.setUser(this);
-    }
-
-    public void removeAppUser(AppUser appUser) {
-        this.appUsers.remove(appUser);
-        appUser.setUser(null);
     }
 
     @Override

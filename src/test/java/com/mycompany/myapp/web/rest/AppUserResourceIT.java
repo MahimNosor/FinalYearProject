@@ -452,7 +452,7 @@ class AppUserResourceIT {
         AppUser partialUpdatedAppUser = new AppUser();
         partialUpdatedAppUser.setId(appUser.getId());
 
-        partialUpdatedAppUser.password(UPDATED_PASSWORD);
+        partialUpdatedAppUser.name(UPDATED_NAME).password(UPDATED_PASSWORD);
 
         restAppUserMockMvc
             .perform(

@@ -1,12 +1,8 @@
 package com.mycompany.myapp.web.rest;
 
-import com.mycompany.myapp.domain.AppUser;
 import com.mycompany.myapp.repository.AppUserRepository;
-import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.service.AppUserService;
 import com.mycompany.myapp.service.dto.AppUserDTO;
-import com.mycompany.myapp.service.dto.TeacherDashboardDTO;
-import com.mycompany.myapp.service.mapper.AppUserMapper;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
 import com.mycompany.myapp.web.rest.errors.ElasticsearchExceptionMapper;
 import jakarta.validation.Valid;
@@ -17,12 +13,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.Logger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
@@ -45,20 +38,9 @@ public class AppUserResource {
 
     private final AppUserRepository appUserRepository;
 
-    private final UserRepository userRepository;
-
-    private final AppUserMapper appUserMapper;
-
-    public AppUserResource(
-        AppUserService appUserService,
-        AppUserRepository appUserRepository,
-        UserRepository userRepository,
-        AppUserMapper appUserMapper // Include appUserMapper in the constructor
-    ) {
+    public AppUserResource(AppUserService appUserService, AppUserRepository appUserRepository) {
         this.appUserService = appUserService;
         this.appUserRepository = appUserRepository;
-        this.userRepository = userRepository;
-        this.appUserMapper = appUserMapper; // Initialize appUserMapper properly
     }
 
     /**
@@ -73,9 +55,6 @@ public class AppUserResource {
         LOG.debug("REST request to save AppUser : {}", appUserDTO);
         if (appUserDTO.getId() != null) {
             throw new BadRequestAlertException("A new appUser cannot already have an ID", ENTITY_NAME, "idexists");
-        }
-        if (appUserDTO.getUserId() != null && !userRepository.existsById(appUserDTO.getUserId())) {
-            throw new BadRequestAlertException("Invalid userId", ENTITY_NAME, "usernotfound");
         }
         appUserDTO = appUserService.save(appUserDTO);
         return ResponseEntity.created(new URI("/api/app-users/" + appUserDTO.getId()))
@@ -105,12 +84,11 @@ public class AppUserResource {
         if (!Objects.equals(id, appUserDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
+
         if (!appUserRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
-        if (appUserDTO.getUserId() != null && !userRepository.existsById(appUserDTO.getUserId())) {
-            throw new BadRequestAlertException("Invalid userId", ENTITY_NAME, "usernotfound");
-        }
+
         appUserDTO = appUserService.update(appUserDTO);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, appUserDTO.getId().toString()))
@@ -140,13 +118,13 @@ public class AppUserResource {
         if (!Objects.equals(id, appUserDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
+
         if (!appUserRepository.existsById(id)) {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
-        if (appUserDTO.getUserId() != null && !userRepository.existsById(appUserDTO.getUserId())) {
-            throw new BadRequestAlertException("Invalid userId", ENTITY_NAME, "usernotfound");
-        }
+
         Optional<AppUserDTO> result = appUserService.partialUpdate(appUserDTO);
+
         return ResponseUtil.wrapOrNotFound(
             result,
             HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, appUserDTO.getId().toString())
@@ -208,25 +186,5 @@ public class AppUserResource {
         } catch (RuntimeException e) {
             throw ElasticsearchExceptionMapper.mapException(e);
         }
-    }
-
-    @GetMapping("/dashboard")
-    public TeacherDashboardDTO getDashboard(Authentication authentication) {
-        return appUserService.getDashboardStats(authentication);
-    }
-
-    @GetMapping("/leaderboard")
-    public List<AppUserDTO> getLeaderboard() {
-        LOG.debug("REST request to get leaderboard");
-        return appUserService.findAllSortedByPoints();
-    }
-
-    @GetMapping("/account")
-    public ResponseEntity<AppUserDTO> getAccount(Authentication authentication) {
-        AppUser appUser = appUserService
-            .getCurrentUser(authentication)
-            .orElseThrow(() -> new BadRequestAlertException("User not found", ENTITY_NAME, "usernotfound"));
-        AppUserDTO appUserDTO = appUserMapper.toDto(appUser);
-        return ResponseEntity.ok(appUserDTO);
     }
 }

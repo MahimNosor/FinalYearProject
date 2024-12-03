@@ -9,7 +9,6 @@ import { ApplicationConfigService } from 'app/core/config/application-config.ser
 import { createRequestOption } from 'app/core/request/request-util';
 import { Search } from 'app/core/request/request.model';
 import { IQuestion, NewQuestion } from '../question.model';
-import { IAppUser } from 'app/entities/app-user/app-user.model';
 
 export type PartialUpdateQuestion = Partial<IQuestion> & Pick<IQuestion, 'id'>;
 
@@ -82,9 +81,5 @@ export class QuestionService {
       return [...questionsToAdd, ...questionCollection];
     }
     return questionCollection;
-  }
-
-  getQuestionsForTeacher(): Observable<IQuestion[]> {
-    return this.http.get<IQuestion[]>(`${this.resourceUrl}/teacher/questions`);
   }
 }

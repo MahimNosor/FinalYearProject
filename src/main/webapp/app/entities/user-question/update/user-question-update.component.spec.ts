@@ -53,10 +53,10 @@ describe('UserQuestion Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call AppUser query and add missing value', () => {
       const userQuestion: IUserQuestion = { id: 456 };
-      const appUser: IAppUser = { id: 23543 };
+      const appUser: IAppUser = { id: 17098 };
       userQuestion.appUser = appUser;
 
-      const appUserCollection: IAppUser[] = [{ id: 30887 }];
+      const appUserCollection: IAppUser[] = [{ id: 3127 }];
       jest.spyOn(appUserService, 'query').mockReturnValue(of(new HttpResponse({ body: appUserCollection })));
       const additionalAppUsers = [appUser];
       const expectedCollection: IAppUser[] = [...additionalAppUsers, ...appUserCollection];
@@ -75,10 +75,10 @@ describe('UserQuestion Management Update Component', () => {
 
     it('Should call Question query and add missing value', () => {
       const userQuestion: IUserQuestion = { id: 456 };
-      const question: IQuestion = { id: 9946 };
+      const question: IQuestion = { id: 32581 };
       userQuestion.question = question;
 
-      const questionCollection: IQuestion[] = [{ id: 3346 }];
+      const questionCollection: IQuestion[] = [{ id: 5894 }];
       jest.spyOn(questionService, 'query').mockReturnValue(of(new HttpResponse({ body: questionCollection })));
       const additionalQuestions = [question];
       const expectedCollection: IQuestion[] = [...additionalQuestions, ...questionCollection];
@@ -97,9 +97,9 @@ describe('UserQuestion Management Update Component', () => {
 
     it('Should update editForm', () => {
       const userQuestion: IUserQuestion = { id: 456 };
-      const appUser: IAppUser = { id: 2583 };
+      const appUser: IAppUser = { id: 20889 };
       userQuestion.appUser = appUser;
-      const question: IQuestion = { id: 4160 };
+      const question: IQuestion = { id: 9220 };
       userQuestion.question = question;
 
       activatedRoute.data = of({ userQuestion });

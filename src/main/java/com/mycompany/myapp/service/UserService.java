@@ -1,10 +1,8 @@
 package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.config.Constants;
-import com.mycompany.myapp.domain.AppUser;
 import com.mycompany.myapp.domain.Authority;
 import com.mycompany.myapp.domain.User;
-import com.mycompany.myapp.repository.AppUserRepository;
 import com.mycompany.myapp.repository.AuthorityRepository;
 import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.repository.search.UserSearchRepository;
@@ -46,22 +44,18 @@ public class UserService {
 
     private final CacheManager cacheManager;
 
-    private final AppUserRepository appUserRepository;
-
     public UserService(
         UserRepository userRepository,
         PasswordEncoder passwordEncoder,
         UserSearchRepository userSearchRepository,
         AuthorityRepository authorityRepository,
-        CacheManager cacheManager,
-        AppUserRepository appUserRepository
+        CacheManager cacheManager
     ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userSearchRepository = userSearchRepository;
         this.authorityRepository = authorityRepository;
         this.cacheManager = cacheManager;
-        this.appUserRepository = appUserRepository;
     }
 
     public Optional<User> activateRegistration(String key) {
@@ -135,7 +129,7 @@ public class UserService {
         newUser.setImageUrl(userDTO.getImageUrl());
         newUser.setLangKey(userDTO.getLangKey());
         // new user is not active
-        newUser.setActivated(true);
+        newUser.setActivated(false);
         // new user gets registration key
         newUser.setActivationKey(RandomUtil.generateActivationKey());
         Set<Authority> authorities = new HashSet<>();
@@ -143,19 +137,6 @@ public class UserService {
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         userSearchRepository.save(newUser);
-
-        AppUser appUser = new AppUser();
-        appUser.setUser(newUser); // Associate AppUser with the created User
-        appUser.setUser(newUser); // Associate with the created User
-        appUser.setName(userDTO.getFirstName() + " " + userDTO.getLastName()); // Set name
-        appUser.setEmail(newUser.getEmail()); // Set email
-        appUser.setPassword(encryptedPassword); // Use the already encrypted password
-        appUser.setRoles("ROLE_USER"); // Set default role
-        appUser.setPoints(0); // Initialize points to 0
-        appUserRepository.save(appUser);
-
-        newUser.addAppUser(appUser);
-
         this.clearUserCaches(newUser);
         LOG.debug("Created Information for User: {}", newUser);
         return newUser;

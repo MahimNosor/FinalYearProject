@@ -1,27 +1,28 @@
 import { ITestCase, NewTestCase } from './test-case.model';
 
 export const sampleWithRequiredData: ITestCase = {
-  id: 25348,
-  input: 'a',
-  expectedOutput: 'cripple than',
+  id: 3816,
+  input: 'yuck mmm',
+  expectedOutput: 'consequently beautifully',
 };
 
 export const sampleWithPartialData: ITestCase = {
-  id: 2591,
-  input: 'over geez fondly',
-  expectedOutput: 'deduction suspiciously',
+  id: 6539,
+  input: 'federate exonerate',
+  expectedOutput: 'aircraft yum inasmuch',
+  description: 'gee',
 };
 
 export const sampleWithFullData: ITestCase = {
-  id: 27588,
-  input: 'place',
-  expectedOutput: 'ah front truly',
-  description: 'smug monumental',
+  id: 24877,
+  input: 'poorly',
+  expectedOutput: 'towards cop kindheartedly',
+  description: 'commonly',
 };
 
 export const sampleWithNewData: NewTestCase = {
-  input: 'shadowy why nifty',
-  expectedOutput: 'hm',
+  input: 'readies without',
+  expectedOutput: 'because black inasmuch',
   id: null,
 };
 

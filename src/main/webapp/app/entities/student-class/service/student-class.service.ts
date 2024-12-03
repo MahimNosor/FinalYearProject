@@ -88,8 +88,4 @@ export class StudentClassService {
     }
     return studentClassCollection;
   }
-
-  getClassesForStudent(studentId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.resourceUrl}/${studentId}`);
-  }
 }

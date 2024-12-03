@@ -22,7 +22,6 @@ export class AppUserService {
 
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/app-users');
   protected resourceSearchUrl = this.applicationConfigService.getEndpointFor('api/app-users/_search');
-  private apiUrl = '/api/teacher';
 
   create(appUser: NewAppUser): Observable<EntityResponseType> {
     return this.http.post<IAppUser>(this.resourceUrl, appUser, { observe: 'response' });
@@ -82,14 +81,5 @@ export class AppUserService {
       return [...appUsersToAdd, ...appUserCollection];
     }
     return appUserCollection;
-  }
-  getDashboardStats(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/dashboard`);
-  }
-  getLeaderboard(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.resourceUrl}/leaderboard`);
-  }
-  getCurrentAppUser(): Observable<IAppUser> {
-    return this.http.get<IAppUser>(`${this.resourceUrl}/account`);
   }
 }

@@ -373,7 +373,7 @@ class TestCaseResourceIT {
         TestCase partialUpdatedTestCase = new TestCase();
         partialUpdatedTestCase.setId(testCase.getId());
 
-        partialUpdatedTestCase.expectedOutput(UPDATED_EXPECTED_OUTPUT);
+        partialUpdatedTestCase.input(UPDATED_INPUT);
 
         restTestCaseMockMvc
             .perform(

@@ -1,15 +1,9 @@
 package com.mycompany.myapp.service;
 
 import com.mycompany.myapp.domain.AppUser;
-import com.mycompany.myapp.domain.enumeration.SubmissionStatus;
 import com.mycompany.myapp.repository.AppUserRepository;
-import com.mycompany.myapp.repository.QuestionRepository;
-import com.mycompany.myapp.repository.StudentClassRepository;
-import com.mycompany.myapp.repository.UserQuestionRepository;
-import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.repository.search.AppUserSearchRepository;
 import com.mycompany.myapp.service.dto.AppUserDTO;
-import com.mycompany.myapp.service.dto.TeacherDashboardDTO;
 import com.mycompany.myapp.service.mapper.AppUserMapper;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,12 +11,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,30 +32,14 @@ public class AppUserService {
 
     private final AppUserSearchRepository appUserSearchRepository;
 
-    private final UserRepository userRepository;
-
-    private final StudentClassRepository studentClassRepository;
-    private final QuestionRepository questionRepository;
-    private final UserQuestionRepository userQuestionRepository;
-
-    private final Logger log = LoggerFactory.getLogger(AppUserService.class);
-
     public AppUserService(
         AppUserRepository appUserRepository,
         AppUserMapper appUserMapper,
-        AppUserSearchRepository appUserSearchRepository,
-        UserRepository userRepository,
-        StudentClassRepository studentClassRepository,
-        QuestionRepository questionRepository,
-        UserQuestionRepository userQuestionRepository
+        AppUserSearchRepository appUserSearchRepository
     ) {
         this.appUserRepository = appUserRepository;
         this.appUserMapper = appUserMapper;
         this.appUserSearchRepository = appUserSearchRepository;
-        this.userRepository = userRepository;
-        this.studentClassRepository = studentClassRepository;
-        this.questionRepository = questionRepository;
-        this.userQuestionRepository = userQuestionRepository;
     }
 
     /**
@@ -76,12 +51,6 @@ public class AppUserService {
     public AppUserDTO save(AppUserDTO appUserDTO) {
         LOG.debug("Request to save AppUser : {}", appUserDTO);
         AppUser appUser = appUserMapper.toEntity(appUserDTO);
-
-        // Link the AppUser to the JHipster User
-        if (appUserDTO.getUserId() != null) {
-            userRepository.findById(appUserDTO.getUserId()).ifPresent(appUser::setUser);
-        }
-
         appUser = appUserRepository.save(appUser);
         appUserSearchRepository.index(appUser);
         return appUserMapper.toDto(appUser);
@@ -96,12 +65,6 @@ public class AppUserService {
     public AppUserDTO update(AppUserDTO appUserDTO) {
         LOG.debug("Request to update AppUser : {}", appUserDTO);
         AppUser appUser = appUserMapper.toEntity(appUserDTO);
-
-        // Link the AppUser to the JHipster User
-        if (appUserDTO.getUserId() != null) {
-            userRepository.findById(appUserDTO.getUserId()).ifPresent(appUser::setUser);
-        }
-
         appUser = appUserRepository.save(appUser);
         appUserSearchRepository.index(appUser);
         return appUserMapper.toDto(appUser);
@@ -188,54 +151,5 @@ public class AppUserService {
         } catch (RuntimeException e) {
             throw e;
         }
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<AppUserDTO> findOneWithUser(Long id) {
-        LOG.debug("Request to get AppUser with User : {}", id);
-        return appUserRepository
-            .findById(id)
-            .map(appUser -> {
-                appUser.setUser(userRepository.findById(appUser.getUser().getId()).orElse(null));
-                return appUserMapper.toDto(appUser);
-            });
-    }
-
-    public TeacherDashboardDTO getDashboardStats(Authentication authentication) {
-        LOG.info("Fetching teacher dashboard stats for user: {}", authentication.getName());
-
-        // Ensure the user has ROLE_TEACHER
-        boolean isTeacher = authentication.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_TEACHER"));
-        if (!isTeacher) {
-            LOG.error("Unauthorized access attempt by user: {}", authentication.getName());
-            throw new RuntimeException("Unauthorized access");
-        }
-
-        // Extract teacher ID from authenticated user
-        Long teacherId = appUserRepository
-            .findByUser_Login(authentication.getName())
-            .map(AppUser::getId)
-            .orElseThrow(() -> new RuntimeException("Teacher not found"));
-        LOG.info("Teacher ID found: {}", teacherId);
-
-        // Fetch stats
-        TeacherDashboardDTO dashboard = new TeacherDashboardDTO();
-        dashboard.setTotalClasses(studentClassRepository.countByTeacherId(teacherId));
-        dashboard.setActiveQuestions(questionRepository.countByTeacherId(teacherId));
-        dashboard.setPendingSubmissions(userQuestionRepository.countByTeacherIdAndStatus(teacherId, SubmissionStatus.PENDING));
-
-        LOG.info("Dashboard stats collected: {}", dashboard);
-        return dashboard;
-    }
-
-    @Transactional(readOnly = true)
-    public List<AppUserDTO> findAllSortedByPoints() {
-        log.debug("Request to get all AppUsers sorted by points");
-        return appUserRepository.findAllByOrderByPointsDesc().stream().map(appUserMapper::toDto).collect(Collectors.toList());
-    }
-
-    public Optional<AppUser> getCurrentUser(Authentication authentication) {
-        String login = authentication.getName();
-        return appUserRepository.findByUser_Login(login);
     }
 }

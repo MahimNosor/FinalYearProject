@@ -1,42 +1,42 @@
 import { IQuestion, NewQuestion } from './question.model';
 
 export const sampleWithRequiredData: IQuestion = {
-  id: 12347,
-  title: 'ha bah',
-  difficulty: 'MEDIUM',
+  id: 18533,
+  title: 'license',
+  difficulty: 'BEGINNER',
   description: '../fake-data/blob/hipster.txt',
-  language: 'JAVASCRIPT',
+  language: 'JAVA',
   testCases: '../fake-data/blob/hipster.txt',
-  maxScore: 13464,
+  maxScore: 3130,
 };
 
 export const sampleWithPartialData: IQuestion = {
-  id: 1270,
-  title: 'whose',
-  difficulty: 'HARD',
+  id: 26371,
+  title: 'and inasmuch',
+  difficulty: 'MEDIUM',
   description: '../fake-data/blob/hipster.txt',
-  language: 'JAVASCRIPT',
+  language: 'CPP',
   testCases: '../fake-data/blob/hipster.txt',
-  maxScore: 17486,
+  maxScore: 28365,
 };
 
 export const sampleWithFullData: IQuestion = {
-  id: 27303,
-  title: 'chairperson amused',
-  difficulty: 'BEGINNER',
+  id: 30230,
+  title: 'consequently',
+  difficulty: 'MEDIUM',
   description: '../fake-data/blob/hipster.txt',
-  language: 'C',
+  language: 'PYTHON',
   testCases: '../fake-data/blob/hipster.txt',
-  maxScore: 9277,
+  maxScore: 27785,
 };
 
 export const sampleWithNewData: NewQuestion = {
-  title: 'notwithstanding',
-  difficulty: 'HARD',
+  title: 'lotion',
+  difficulty: 'BEGINNER',
   description: '../fake-data/blob/hipster.txt',
   language: 'JAVASCRIPT',
   testCases: '../fake-data/blob/hipster.txt',
-  maxScore: 25561,
+  maxScore: 16662,
   id: null,
 };
 

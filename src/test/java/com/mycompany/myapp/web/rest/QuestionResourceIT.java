@@ -450,7 +450,7 @@ class QuestionResourceIT {
         Question partialUpdatedQuestion = new Question();
         partialUpdatedQuestion.setId(question.getId());
 
-        partialUpdatedQuestion.difficulty(UPDATED_DIFFICULTY).testCases(UPDATED_TEST_CASES);
+        partialUpdatedQuestion.description(UPDATED_DESCRIPTION).maxScore(UPDATED_MAX_SCORE);
 
         restQuestionMockMvc
             .perform(
