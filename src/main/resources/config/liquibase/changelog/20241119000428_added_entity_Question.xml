@@ -35,6 +35,12 @@
             <column name="student_class_id" type="bigint">
                 <constraints nullable="true" />
             </column>
+            <column name="app_user_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_preloaded" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>

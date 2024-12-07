@@ -67,6 +67,9 @@ public class AppUser implements Serializable {
     @JsonIgnoreProperties(value = { "users" }, allowSetters = true)
     private Set<StudentClass> classes = new HashSet<>();
 
+    @OneToMany(mappedBy = "appUser")
+    private Set<Question> questions = new HashSet<>();
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {

@@ -38,6 +38,10 @@ public class StudentClass implements Serializable {
     @JsonIgnoreProperties(value = { "classes" }, allowSetters = true)
     private Set<AppUser> users = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "app_user_id", nullable = true)
+    private AppUser appUser;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
