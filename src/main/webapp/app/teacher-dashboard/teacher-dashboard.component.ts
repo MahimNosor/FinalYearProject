@@ -27,7 +27,11 @@ export class TeacherDashboardComponent implements OnInit {
   }
 
   navigateToQuestionManagement(): void {
-    this.router.navigate(['/teacher/questions']);
+    this.router.navigate(['question-management']);
+  }
+
+  navigateToClassManagement(): void {
+    this.router.navigate(['class-management']);
   }
 
   private loadDashboardStats(): void {
