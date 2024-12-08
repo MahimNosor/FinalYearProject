@@ -16,5 +16,8 @@ public interface StudentClassRepository extends JpaRepository<StudentClass, Long
     @Query("SELECT COUNT(sc) FROM StudentClass sc JOIN sc.users u WHERE u.roles = 'ROLE_TEACHER' AND u.id = :teacherId")
     int countByTeacherId(@Param("teacherId") Long teacherId);
 
+    @Query("SELECT sc FROM StudentClass sc WHERE sc.appUser.id = :appUserId")
+    List<StudentClass> findByAppUserId(@Param("appUserId") Long appUserId);
+
     List<StudentClass> findByUsers_Id(Long userId);
 }

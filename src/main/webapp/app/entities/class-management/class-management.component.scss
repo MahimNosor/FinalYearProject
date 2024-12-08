@@ -1,0 +1,31 @@
+.class-management-container {
+  margin: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  th {
+    background-color: #f4f4f4;
+  }
+
+  .btn-danger {
+    color: #fff;
+    background-color: #d9534f;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .btn-danger:hover {
+    background-color: #c9302c;
+  }
+}

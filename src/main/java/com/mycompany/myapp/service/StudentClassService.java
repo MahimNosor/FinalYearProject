@@ -153,4 +153,13 @@ public class StudentClassService {
         log.debug("Request to get classes for student ID: {}", studentId);
         return studentClassRepository.findByUsers_Id(studentId).stream().map(studentClassMapper::toDto).collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<StudentClassDTO> getClassesByTeacher(Long teacherAppUserId) {
+        // Fetch classes linked to the teacher's AppUser ID
+        List<StudentClass> classes = studentClassRepository.findByAppUserId(teacherAppUserId);
+
+        // Convert entities to DTOs for use in the frontend
+        return classes.stream().map(studentClassMapper::toDto).collect(Collectors.toList());
+    }
 }

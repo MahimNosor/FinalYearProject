@@ -1,6 +1,9 @@
 package com.mycompany.myapp.web.rest;
 
+import com.mycompany.myapp.domain.AppUser;
+import com.mycompany.myapp.repository.AppUserRepository;
 import com.mycompany.myapp.repository.StudentClassRepository;
+import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.service.StudentClassService;
 import com.mycompany.myapp.service.dto.StudentClassDTO;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
@@ -42,9 +45,16 @@ public class StudentClassResource {
     private final StudentClassRepository studentClassRepository;
     private final Logger log = LoggerFactory.getLogger(StudentClassResource.class);
 
-    public StudentClassResource(StudentClassService studentClassService, StudentClassRepository studentClassRepository) {
+    private final AppUserRepository appUserRepository;
+
+    public StudentClassResource(
+        StudentClassService studentClassService,
+        StudentClassRepository studentClassRepository,
+        AppUserRepository appUserRepository
+    ) {
         this.studentClassService = studentClassService;
         this.studentClassRepository = studentClassRepository;
+        this.appUserRepository = appUserRepository;
     }
 
     /**
@@ -196,5 +206,19 @@ public class StudentClassResource {
     public List<StudentClassDTO> getStudentClasses(@PathVariable Long studentId) {
         log.debug("REST request to get classes for student: {}", studentId);
         return studentClassService.findClassesByStudentId(studentId);
+    }
+
+    @GetMapping("/teacher/classes")
+    public ResponseEntity<List<StudentClassDTO>> getTeacherClasses() {
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
+
+        AppUser teacher = appUserRepository
+            .findByUser_Login(currentUserLogin)
+            .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+
+        List<StudentClassDTO> classes = studentClassService.getClassesByTeacher(teacher.getId());
+
+        return ResponseEntity.ok(classes);
     }
 }

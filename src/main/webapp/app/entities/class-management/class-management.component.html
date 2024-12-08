@@ -1,1 +1,21 @@
-<p>class-management works!</p>
+<div class="class-management-container">
+  <h2>Class Management</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Class Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let classItem of classes; index as i">
+        <td>{{ i + 1 }}</td>
+        <td>{{ classItem.className }}</td>
+        <td>
+          <button (click)="deleteClass(classItem.id)" class="btn btn-danger">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
