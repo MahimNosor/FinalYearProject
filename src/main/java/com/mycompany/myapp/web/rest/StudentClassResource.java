@@ -77,6 +77,23 @@ public class StudentClassResource {
         if (studentClassDTO.getId() != null) {
             throw new BadRequestAlertException("A new studentClass cannot already have an ID", ENTITY_NAME, "idexists");
         }
+
+        // Get the logged-in user's login
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
+
+        // Fetch the current user's AppUser
+        User currentUser = userRepository.findOneByLogin(currentUserLogin)
+            .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
+
+        AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
+            .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+
+        // If the user is a teacher, link the class to their AppUserID
+        if (appUser.getRoles().contains("ROLE_TEACHER")) {
+            studentClassDTO.setAppUserId(appUser.getId());
+        }
+
         studentClassDTO = studentClassService.save(studentClassDTO);
         return ResponseEntity.created(new URI("/api/student-classes/" + studentClassDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, studentClassDTO.getId().toString()))

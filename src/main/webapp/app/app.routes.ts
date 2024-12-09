@@ -5,6 +5,7 @@ import { errorRoute } from './layouts/error/error.route';
 import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard.component';
 import { QuestionManagementComponent } from './entities/question-management/question-management.component';
 import { ClassManagementComponent } from './entities/class-management/class-management.component';
+import { StudentClassUpdateComponent } from './entities/student-class/update/student-class-update.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,11 @@ const routes: Routes = [
   {
     path: 'question-management',
     component: QuestionManagementComponent,
+    
+  },
+  {
+    path: 'teacher/class-management/new',
+    component: StudentClassUpdateComponent,
     canActivate: [UserRouteAccessService],
     data: { authorities: ['ROLE_TEACHER'] },
   },

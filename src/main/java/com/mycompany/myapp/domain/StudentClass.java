@@ -101,6 +101,14 @@ public class StudentClass implements Serializable {
         return this;
     }
 
+    public AppUser getAppUser() {
+        return this.appUser;
+    }
+
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
+    }
+    
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override

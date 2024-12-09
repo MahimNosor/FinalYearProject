@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'jhi-class-management',
@@ -13,10 +14,14 @@ import { CommonModule } from '@angular/common';
 export class ClassManagementComponent implements OnInit {
   classes: any[] = []; // Array to store classes
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
     this.loadClasses();
+  }
+
+  navigateToCreateClass(): void {
+    this.router.navigate(['/teacher/class-management/new']);
   }
 
   loadClasses(): void {
