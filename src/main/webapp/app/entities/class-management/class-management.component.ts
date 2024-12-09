@@ -20,7 +20,7 @@ export class ClassManagementComponent implements OnInit {
   }
 
   loadClasses(): void {
-    this.http.get<any[]>('/api/teacher/classes').subscribe({
+    this.http.get<any[]>('/api/student-classes/teacher/classes').subscribe({
       next: response => {
         this.classes = response; // Store the response
       },

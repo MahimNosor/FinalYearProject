@@ -25,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
+import com.mycompany.myapp.repository.UserRepository;
+import com.mycompany.myapp.domain.User;
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.StudentClass}.
@@ -47,14 +49,18 @@ public class StudentClassResource {
 
     private final AppUserRepository appUserRepository;
 
+    private final UserRepository userRepository;
+
     public StudentClassResource(
         StudentClassService studentClassService,
         StudentClassRepository studentClassRepository,
-        AppUserRepository appUserRepository
+        AppUserRepository appUserRepository,
+        UserRepository userRepository
     ) {
         this.studentClassService = studentClassService;
         this.studentClassRepository = studentClassRepository;
         this.appUserRepository = appUserRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -202,7 +208,7 @@ public class StudentClassResource {
         }
     }
 
-    @GetMapping("/student-classes/{studentId}")
+    @GetMapping("/{studentId}")
     public List<StudentClassDTO> getStudentClasses(@PathVariable Long studentId) {
         log.debug("REST request to get classes for student: {}", studentId);
         return studentClassService.findClassesByStudentId(studentId);
@@ -213,9 +219,13 @@ public class StudentClassResource {
         String currentUserLogin = SecurityUtils.getCurrentUserLogin()
             .orElseThrow(() -> new RuntimeException("Current user login not found"));
 
+        User currentUser = userRepository
+        .findOneByLogin(currentUserLogin)
+        .orElseThrow(() -> new RuntimeException("User not found for current login"));
+
         AppUser teacher = appUserRepository
-            .findByUser_Login(currentUserLogin)
-            .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+        .findOneByUserId(currentUser.getId())
+        .orElseThrow(() -> new RuntimeException("AppUser not found for current user ID"));
 
         List<StudentClassDTO> classes = studentClassService.getClassesByTeacher(teacher.getId());
 
