@@ -21,7 +21,7 @@
                 <constraints nullable="false" />
             </column>
             <column name="description" type="${clobType}">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="language" type="varchar(255)">
                 <constraints nullable="false" />

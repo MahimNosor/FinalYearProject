@@ -66,6 +66,9 @@ jhipster:
     base-url: http://127.0.0.1:8080
   logging:
     # To test json console appender
+    level:
+        org.hibernate.SQL: DEBUG
+        org.hibernate.type.descriptor.sql.BasicBinder: TRACE
     use-json-format: false
     logstash:
       enabled: false

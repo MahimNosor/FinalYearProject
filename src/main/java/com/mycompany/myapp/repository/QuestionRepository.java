@@ -12,6 +12,5 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-    @Query("SELECT COUNT(q) FROM Question q JOIN q.studentClass sc JOIN sc.users u WHERE u.roles = 'ROLE_TEACHER' AND u.id = :teacherId")
-    int countByTeacherId(@Param("teacherId") Long teacherId);
+    
 }

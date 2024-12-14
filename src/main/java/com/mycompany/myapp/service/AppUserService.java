@@ -220,9 +220,9 @@ public class AppUserService {
 
         // Fetch stats
         TeacherDashboardDTO dashboard = new TeacherDashboardDTO();
-        dashboard.setTotalClasses(studentClassRepository.countByTeacherId(teacherId));
+        /*dashboard.setTotalClasses(studentClassRepository.countByTeacherId(teacherId));
         dashboard.setActiveQuestions(questionRepository.countByTeacherId(teacherId));
-        dashboard.setPendingSubmissions(userQuestionRepository.countByTeacherIdAndStatus(teacherId, SubmissionStatus.PENDING));
+        dashboard.setPendingSubmissions(userQuestionRepository.countByTeacherIdAndStatus(teacherId, SubmissionStatus.PENDING)); */
 
         LOG.info("Dashboard stats collected: {}", dashboard);
         return dashboard;
