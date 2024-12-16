@@ -1,1 +1,32 @@
-<p>question-management works!</p>
+<div class="question-management-container">
+  <h2>Question Management</h2>
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <button class="btn btn-primary" routerLink="/question-management/new">
+      Create Question
+    </button>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th>Difficulty</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let question of questions; index as i">
+        <td>{{ i + 1 }}</td>
+        <td>{{ question.title }}</td>
+        <td>{{ question.difficulty }}</td>
+        <td>
+          <button class="btn btn-danger" (click)="deleteQuestion(question.id)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

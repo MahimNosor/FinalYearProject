@@ -74,6 +74,7 @@ public class StudentClassResource {
     public ResponseEntity<StudentClassDTO> createStudentClass(@Valid @RequestBody StudentClassDTO studentClassDTO)
         throws URISyntaxException {
         LOG.debug("REST request to save StudentClass : {}", studentClassDTO);
+
         if (studentClassDTO.getId() != null) {
             throw new BadRequestAlertException("A new studentClass cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -82,23 +83,34 @@ public class StudentClassResource {
         String currentUserLogin = SecurityUtils.getCurrentUserLogin()
             .orElseThrow(() -> new RuntimeException("Current user login not found"));
 
-        // Fetch the current user's AppUser
-        User currentUser = userRepository.findOneByLogin(currentUserLogin)
-            .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
+        // Check if the user is the admin
+        if ("admin".equals(currentUserLogin)) {
+            LOG.debug("Admin user detected. Proceeding with class creation without linking AppUser.");
+            // Save the class without linking to an AppUser
+            studentClassDTO = studentClassService.save(studentClassDTO);
+        } else {
+            // Fetch the current user's details
+            User currentUser = userRepository.findOneByLogin(currentUserLogin)
+                .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
 
-        AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
-            .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+            // Fetch the AppUser associated with the current user
+            AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
+                .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
 
-        // If the user is a teacher, link the class to their AppUserID
-        if (appUser.getRoles().contains("ROLE_TEACHER")) {
-            studentClassDTO.setAppUserId(appUser.getId());
+            // Check if the user is a teacher
+            if (appUser.getRoles().contains("ROLE_TEACHER")) {
+                studentClassDTO.setAppUserId(appUser.getId()); // Link teacher's AppUser ID
+                studentClassDTO = studentClassService.save(studentClassDTO);
+            } else {
+                throw new RuntimeException("Unauthorized: Only teachers and the admin can create classes.");
+            }
         }
 
-        studentClassDTO = studentClassService.save(studentClassDTO);
-        return ResponseEntity.created(new URI("/api/student-classes/" + studentClassDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, studentClassDTO.getId().toString()))
-            .body(studentClassDTO);
-    }
+    return ResponseEntity.created(new URI("/api/student-classes/" + studentClassDTO.getId()))
+        .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, studentClassDTO.getId().toString()))
+        .body(studentClassDTO);
+}
+
 
     /**
      * {@code PUT  /student-classes/:id} : Updates an existing studentClass.

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 /**
  * Service Implementation for managing {@link com.mycompany.myapp.domain.Question}.
  */
@@ -140,5 +141,12 @@ public class QuestionService {
         } catch (RuntimeException e) {
             throw e;
         }
+    }
+
+    public List<QuestionDTO> findAllByTeacher(Long teacherId) {
+        LOG.debug("Request to get all Questions for Teacher : {}", teacherId);
+        return questionRepository.findAllByAppUserId(teacherId).stream()
+            .map(questionMapper::toDto)
+            .collect(Collectors.toList());
     }
 }

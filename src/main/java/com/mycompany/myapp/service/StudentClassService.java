@@ -162,4 +162,6 @@ public class StudentClassService {
         // Convert entities to DTOs for use in the frontend
         return classes.stream().map(studentClassMapper::toDto).collect(Collectors.toList());
     }
+
+    
 }

@@ -19,7 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
-
+import org.springframework.security.core.Authentication;
+import com.mycompany.myapp.security.SecurityUtils;
+import com.mycompany.myapp.domain.User;
+import com.mycompany.myapp.repository.UserRepository;
+import com.mycompany.myapp.domain.AppUser;
+import com.mycompany.myapp.repository.AppUserRepository;
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.Question}.
  */
@@ -38,9 +43,15 @@ public class QuestionResource {
 
     private final QuestionRepository questionRepository;
 
-    public QuestionResource(QuestionService questionService, QuestionRepository questionRepository) {
+    private final UserRepository userRepository;
+
+    private final AppUserRepository appUserRepository;
+
+    public QuestionResource(QuestionService questionService, QuestionRepository questionRepository, UserRepository userRepository, AppUserRepository appUserRepository) {
         this.questionService = questionService;
         this.questionRepository = questionRepository;
+        this.userRepository = userRepository;
+        this.appUserRepository = appUserRepository;
     }
 
     /**
@@ -53,14 +64,44 @@ public class QuestionResource {
     @PostMapping("")
     public ResponseEntity<QuestionDTO> createQuestion(@Valid @RequestBody QuestionDTO questionDTO) throws URISyntaxException {
         LOG.debug("REST request to save Question : {}", questionDTO);
+
         if (questionDTO.getId() != null) {
             throw new BadRequestAlertException("A new question cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        questionDTO = questionService.save(questionDTO);
+
+        // Get the logged-in user's login
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
+
+        // Check if the user is the admin
+        if ("admin".equals(currentUserLogin)) {
+            LOG.debug("Admin user detected. Proceeding to create a question without linking to AppUser.");
+            questionDTO = questionService.save(questionDTO);
+        } else {
+            // Fetch the current user's details
+            User currentUser = userRepository.findOneByLogin(currentUserLogin)
+                .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
+
+            // Fetch the AppUser associated with the current user
+            AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
+                .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+
+            // Check if the user is a teacher
+            if (appUser.getRoles().contains("ROLE_TEACHER")) {
+                LOG.debug("Teacher user detected. Linking the question to AppUser ID: {}", appUser.getId());
+                questionDTO.setAppUserId(appUser.getId()); // Link the question to the teacher's AppUser ID
+                questionDTO = questionService.save(questionDTO);
+            } else {
+                throw new RuntimeException("Unauthorized: Only teachers and the admin can create questions.");
+            }
+        }
+
         return ResponseEntity.created(new URI("/api/questions/" + questionDTO.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, questionDTO.getId().toString()))
             .body(questionDTO);
     }
+
+
 
     /**
      * {@code PUT  /questions/:id} : Updates an existing question.
@@ -185,5 +226,27 @@ public class QuestionResource {
         } catch (RuntimeException e) {
             throw ElasticsearchExceptionMapper.mapException(e);
         }
+    }
+
+    @GetMapping("/teacher/questions")
+    public ResponseEntity<List<QuestionDTO>> getTeacherQuestions() {
+        // Get the currently logged-in user
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
+
+        // Fetch the User entity
+        User currentUser = userRepository
+            .findOneByLogin(currentUserLogin)
+            .orElseThrow(() -> new RuntimeException("User not found for current login"));
+
+        // Fetch the AppUser entity linked to the User
+        AppUser teacher = appUserRepository
+            .findOneByUserId(currentUser.getId())
+            .orElseThrow(() -> new RuntimeException("AppUser not found for current user ID"));
+
+        // Fetch the questions created by the teacher
+        List<QuestionDTO> questions = questionService.findAllByTeacher(teacher.getId());
+
+        return ResponseEntity.ok(questions);
     }
 }

@@ -6,6 +6,7 @@ import { TeacherDashboardComponent } from './teacher-dashboard/teacher-dashboard
 import { QuestionManagementComponent } from './entities/question-management/question-management.component';
 import { ClassManagementComponent } from './entities/class-management/class-management.component';
 import { StudentClassUpdateComponent } from './entities/student-class/update/student-class-update.component';
+import { QuestionUpdateComponent } from './entities/question/update/question-update.component';
 
 const routes: Routes = [
   {
@@ -61,6 +62,12 @@ const routes: Routes = [
   {
     path: 'teacher/class-management/new',
     component: StudentClassUpdateComponent,
+    canActivate: [UserRouteAccessService],
+    data: { authorities: ['ROLE_TEACHER'] },
+  },
+  {
+    path: 'teacher/question-management/new',
+    component: QuestionUpdateComponent, 
     canActivate: [UserRouteAccessService],
     data: { authorities: ['ROLE_TEACHER'] },
   },

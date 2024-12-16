@@ -35,6 +35,8 @@ public class QuestionDTO implements Serializable {
 
     private StudentClassDTO studentClass;
 
+    private Long appUserId;
+
     public Long getId() {
         return id;
     }
@@ -97,6 +99,14 @@ public class QuestionDTO implements Serializable {
 
     public void setStudentClass(StudentClassDTO studentClass) {
         this.studentClass = studentClass;
+    }
+
+        public Long getAppUserId() {
+        return appUserId;
+    }
+
+    public void setAppUserId(Long appUserId) {
+        this.appUserId = appUserId;
     }
 
     @Override
