@@ -86,7 +86,14 @@
                 }
               </div>
             </th>
-
+            <th scope="col" jhiSortBy="password">
+              <div class="d-flex">
+                <span jhiTranslate="finalYearProjectApp.appUser.password">Password</span>
+                @if (!currentSearch) {
+                  <fa-icon class="p-1" icon="sort"></fa-icon>
+                }
+              </div>
+            </th>
             <th scope="col" jhiSortBy="roles">
               <div class="d-flex">
                 <span jhiTranslate="finalYearProjectApp.appUser.roles">Roles</span>
@@ -119,6 +126,7 @@
               </td>
               <td>{{ appUser.name }}</td>
               <td>{{ appUser.email }}</td>
+              <td>{{ appUser.password }}</td>
               <td>{{ appUser.roles }}</td>
               <td>{{ appUser.points }}</td>
               <td>
@@ -131,6 +139,21 @@
               </td>
               <td class="text-end">
                 <div class="btn-group">
+                  <button
+                    type="submit"
+                    [routerLink]="['/assignment']"
+                    [queryParams]="{ 'filter[appUserId.in]': appUser.id }"
+                    class="btn btn-info btn-sm"
+                    data-cy="filterOtherEntityButton"
+                  >
+                    <fa-icon icon="eye"></fa-icon>
+                    <span
+                      class="d-none d-md-inline"
+                      jhiTranslate="entity.action.show"
+                      [translateValues]="{ otherEntity: ('finalYearProjectApp.appUser.assignments' | translate) }"
+                      >Show Assignments</span
+                    >
+                  </button>
                   <a [routerLink]="['/app-user', appUser.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
                     <fa-icon icon="eye"></fa-icon>
                     <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>

@@ -49,10 +49,10 @@ describe('Question Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call StudentClass query and add missing value', () => {
       const question: IQuestion = { id: 456 };
-      const studentClass: IStudentClass = { id: 1353 };
+      const studentClass: IStudentClass = { id: 21844 };
       question.studentClass = studentClass;
 
-      const studentClassCollection: IStudentClass[] = [{ id: 18196 }];
+      const studentClassCollection: IStudentClass[] = [{ id: 9733 }];
       jest.spyOn(studentClassService, 'query').mockReturnValue(of(new HttpResponse({ body: studentClassCollection })));
       const additionalStudentClasses = [studentClass];
       const expectedCollection: IStudentClass[] = [...additionalStudentClasses, ...studentClassCollection];
@@ -71,7 +71,7 @@ describe('Question Management Update Component', () => {
 
     it('Should update editForm', () => {
       const question: IQuestion = { id: 456 };
-      const studentClass: IStudentClass = { id: 17589 };
+      const studentClass: IStudentClass = { id: 8872 };
       question.studentClass = studentClass;
 
       activatedRoute.data = of({ question });

@@ -1,6 +1,7 @@
 package com.mycompany.myapp.domain;
 
 import static com.mycompany.myapp.domain.AppUserTestSamples.*;
+import static com.mycompany.myapp.domain.AssignmentTestSamples.*;
 import static com.mycompany.myapp.domain.StudentClassTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,5 +46,27 @@ class StudentClassTest {
         studentClass.setUsers(new HashSet<>());
         assertThat(studentClass.getUsers()).doesNotContain(appUserBack);
         assertThat(appUserBack.getClasses()).doesNotContain(studentClass);
+    }
+
+    @Test
+    void assignmentsTest() {
+        StudentClass studentClass = getStudentClassRandomSampleGenerator();
+        Assignment assignmentBack = getAssignmentRandomSampleGenerator();
+
+        studentClass.addAssignments(assignmentBack);
+        assertThat(studentClass.getAssignments()).containsOnly(assignmentBack);
+        assertThat(assignmentBack.getStudentClasses()).containsOnly(studentClass);
+
+        studentClass.removeAssignments(assignmentBack);
+        assertThat(studentClass.getAssignments()).doesNotContain(assignmentBack);
+        assertThat(assignmentBack.getStudentClasses()).doesNotContain(studentClass);
+
+        studentClass.assignments(new HashSet<>(Set.of(assignmentBack)));
+        assertThat(studentClass.getAssignments()).containsOnly(assignmentBack);
+        assertThat(assignmentBack.getStudentClasses()).containsOnly(studentClass);
+
+        studentClass.setAssignments(new HashSet<>());
+        assertThat(studentClass.getAssignments()).doesNotContain(assignmentBack);
+        assertThat(assignmentBack.getStudentClasses()).doesNotContain(studentClass);
     }
 }

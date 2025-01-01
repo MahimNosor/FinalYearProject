@@ -49,10 +49,10 @@ describe('TestCase Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call Question query and add missing value', () => {
       const testCase: ITestCase = { id: 456 };
-      const question: IQuestion = { id: 13439 };
+      const question: IQuestion = { id: 11748 };
       testCase.question = question;
 
-      const questionCollection: IQuestion[] = [{ id: 26983 }];
+      const questionCollection: IQuestion[] = [{ id: 22273 }];
       jest.spyOn(questionService, 'query').mockReturnValue(of(new HttpResponse({ body: questionCollection })));
       const additionalQuestions = [question];
       const expectedCollection: IQuestion[] = [...additionalQuestions, ...questionCollection];
@@ -71,7 +71,7 @@ describe('TestCase Management Update Component', () => {
 
     it('Should update editForm', () => {
       const testCase: ITestCase = { id: 456 };
-      const question: IQuestion = { id: 29662 };
+      const question: IQuestion = { id: 20078 };
       testCase.question = question;
 
       activatedRoute.data = of({ testCase });

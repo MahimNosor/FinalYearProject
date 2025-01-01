@@ -17,8 +17,8 @@ export type EntityArrayResponseType = HttpResponse<IStudentClass[]>;
 
 @Injectable({ providedIn: 'root' })
 export class StudentClassService {
-  protected http = inject(HttpClient);
-  protected applicationConfigService = inject(ApplicationConfigService);
+  protected readonly http = inject(HttpClient);
+  protected readonly applicationConfigService = inject(ApplicationConfigService);
 
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/student-classes');
   protected resourceSearchUrl = this.applicationConfigService.getEndpointFor('api/student-classes/_search');
@@ -87,9 +87,5 @@ export class StudentClassService {
       return [...studentClassesToAdd, ...studentClassCollection];
     }
     return studentClassCollection;
-  }
-
-  getClassesForStudent(studentId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.resourceUrl}/${studentId}`);
   }
 }

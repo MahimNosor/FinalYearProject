@@ -25,6 +25,7 @@ describe('UserQuestion Form Service', () => {
             status: expect.any(Object),
             appUser: expect.any(Object),
             question: expect.any(Object),
+            assignment: expect.any(Object),
           }),
         );
       });
@@ -40,6 +41,7 @@ describe('UserQuestion Form Service', () => {
             status: expect.any(Object),
             appUser: expect.any(Object),
             question: expect.any(Object),
+            assignment: expect.any(Object),
           }),
         );
       });

@@ -49,6 +49,14 @@
               </div>
             }
           </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.userQuestion.assignment">Assignment</span></dt>
+          <dd>
+            @if (userQuestion()!.assignment) {
+              <div>
+                <a [routerLink]="['/assignment', userQuestion()!.assignment?.id, 'view']">{{ userQuestionRef.assignment?.id }}</a>
+              </div>
+            }
+          </dd>
         </dl>
 
         <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

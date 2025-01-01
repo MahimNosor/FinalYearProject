@@ -19,6 +19,8 @@ public class StudentClassDTO implements Serializable {
 
     private Set<AppUserDTO> users = new HashSet<>();
 
+    private Set<AssignmentDTO> assignments = new HashSet<>();
+
     private Long appUserId;
 
     public Long getId() {
@@ -52,6 +54,14 @@ public class StudentClassDTO implements Serializable {
     public void setAppUserId(Long appUserId) {
         this.appUserId = appUserId;
     }
+
+    public Set<AssignmentDTO> getAssignments() {
+        return assignments;
+     }
+    public void setAssignments(Set<AssignmentDTO> assignments) {
+        this.assignments = assignments;
+    }
+
 
     @Override
     public boolean equals(Object o) {

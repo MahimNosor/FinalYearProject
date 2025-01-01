@@ -64,11 +64,18 @@ public class AppUser implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "classes_id")
     )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "users" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "users", "assignments" }, allowSetters = true)
     private Set<StudentClass> classes = new HashSet<>();
 
     @OneToMany(mappedBy = "appUser")
     private Set<Question> questions = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "appUser")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @org.springframework.data.annotation.Transient
+    @JsonIgnoreProperties(value = { "appUser", "studentClasses", "userQuestions" }, allowSetters = true)
+    private Set<Assignment> assignments = new HashSet<>();
+
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -179,6 +186,36 @@ public class AppUser implements Serializable {
 
     public AppUser removeClasses(StudentClass studentClass) {
         this.classes.remove(studentClass);
+        return this;
+    }
+    public Set<Assignment> getAssignments() {
+        return this.assignments;
+    }
+
+    public void setAssignments(Set<Assignment> assignments) {
+        if (this.assignments != null) {
+            this.assignments.forEach(i -> i.setAppUser(null));
+        }
+        if (assignments != null) {
+            assignments.forEach(i -> i.setAppUser(this));
+        }
+        this.assignments = assignments;
+    }
+
+    public AppUser assignments(Set<Assignment> assignments) {
+        this.setAssignments(assignments);
+        return this;
+    }
+
+    public AppUser addAssignments(Assignment assignment) {
+        this.assignments.add(assignment);
+        assignment.setAppUser(this);
+        return this;
+    }
+
+    public AppUser removeAssignments(Assignment assignment) {
+        this.assignments.remove(assignment);
+        assignment.setAppUser(null);
         return this;
     }
 

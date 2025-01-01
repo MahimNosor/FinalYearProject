@@ -49,10 +49,10 @@ describe('AppUser Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call StudentClass query and add missing value', () => {
       const appUser: IAppUser = { id: 456 };
-      const classes: IStudentClass[] = [{ id: 25689 }];
+      const classes: IStudentClass[] = [{ id: 13581 }];
       appUser.classes = classes;
 
-      const studentClassCollection: IStudentClass[] = [{ id: 25865 }];
+      const studentClassCollection: IStudentClass[] = [{ id: 4265 }];
       jest.spyOn(studentClassService, 'query').mockReturnValue(of(new HttpResponse({ body: studentClassCollection })));
       const additionalStudentClasses = [...classes];
       const expectedCollection: IStudentClass[] = [...additionalStudentClasses, ...studentClassCollection];
@@ -71,7 +71,7 @@ describe('AppUser Management Update Component', () => {
 
     it('Should update editForm', () => {
       const appUser: IAppUser = { id: 456 };
-      const classes: IStudentClass = { id: 26497 };
+      const classes: IStudentClass = { id: 13507 };
       appUser.classes = [classes];
 
       activatedRoute.data = of({ appUser });

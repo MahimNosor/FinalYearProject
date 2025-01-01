@@ -1,0 +1,209 @@
+<div>
+  <h2 id="page-heading" data-cy="AssignmentHeading">
+    <span jhiTranslate="finalYearProjectApp.assignment.home.title">Assignments</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+        <span jhiTranslate="finalYearProjectApp.assignment.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-assignment"
+        [routerLink]="['/assignment/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span class="hidden-sm-down" jhiTranslate="finalYearProjectApp.assignment.home.createLabel">Create a new Assignment</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <form name="searchForm" class="row row-cols-sm-auto align-items-center">
+    <div class="col-sm-12">
+      <div class="input-group w-100 mt-3">
+        <label class="visually-hidden" for="currentSearch" jhiTranslate="finalYearProjectApp.assignment.home.search"
+          >Search for Assignment</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="currentSearch"
+          id="currentSearch"
+          name="currentSearch"
+          placeholder="{{ 'finalYearProjectApp.assignment.home.search' | translate }}"
+        />
+
+        <button class="btn btn-info" (click)="search(currentSearch)">
+          <fa-icon icon="search"></fa-icon>
+        </button>
+
+        @if (currentSearch) {
+          <button class="btn btn-danger" (click)="search('')">
+            <fa-icon icon="trash-alt"></fa-icon>
+          </button>
+        }
+      </div>
+    </div>
+  </form>
+
+  <jhi-filter [filters]="filters"></jhi-filter>
+
+  @if (assignments?.length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="finalYearProjectApp.assignment.home.notFound">No Assignments found</span>
+    </div>
+  }
+
+  @if (assignments && assignments.length > 0) {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [sortState]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="title">
+              <div class="d-flex">
+                <span jhiTranslate="finalYearProjectApp.assignment.title">Title</span>
+                @if (!currentSearch) {
+                  <fa-icon class="p-1" icon="sort"></fa-icon>
+                }
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="difficulty">
+              <div class="d-flex">
+                <span jhiTranslate="finalYearProjectApp.assignment.difficulty">Difficulty</span>
+                @if (!currentSearch) {
+                  <fa-icon class="p-1" icon="sort"></fa-icon>
+                }
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="description">
+              <div class="d-flex">
+                <span jhiTranslate="finalYearProjectApp.assignment.description">Description</span>
+                @if (!currentSearch) {
+                  <fa-icon class="p-1" icon="sort"></fa-icon>
+                }
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="language">
+              <div class="d-flex">
+                <span jhiTranslate="finalYearProjectApp.assignment.language">Language</span>
+                @if (!currentSearch) {
+                  <fa-icon class="p-1" icon="sort"></fa-icon>
+                }
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="testCases">
+              <div class="d-flex">
+                <span jhiTranslate="finalYearProjectApp.assignment.testCases">Test Cases</span>
+                @if (!currentSearch) {
+                  <fa-icon class="p-1" icon="sort"></fa-icon>
+                }
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="maxScore">
+              <div class="d-flex">
+                <span jhiTranslate="finalYearProjectApp.assignment.maxScore">Max Score</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="isPreloaded">
+              <div class="d-flex">
+                <span jhiTranslate="finalYearProjectApp.assignment.isPreloaded">Is Preloaded</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="appUser.name">
+              <div class="d-flex">
+                <span jhiTranslate="finalYearProjectApp.assignment.appUser">App User</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (assignment of assignments; track trackId(assignment)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/assignment', assignment.id, 'view']">{{ assignment.id }}</a>
+              </td>
+              <td>{{ assignment.title }}</td>
+              <td [jhiTranslate]="'finalYearProjectApp.difficulty.' + (assignment.difficulty ?? 'null')">
+                {{ { null: '', BEGINNER: 'BEGINNER', MEDIUM: 'MEDIUM', HARD: 'HARD' }[assignment.difficulty ?? 'null'] }}
+              </td>
+              <td>{{ assignment.description }}</td>
+              <td [jhiTranslate]="'finalYearProjectApp.ProgrammingLanguage.' + (assignment.language ?? 'null')">
+                {{
+                  { null: '', JAVA: 'JAVA', PYTHON: 'PYTHON', JAVASCRIPT: 'JAVASCRIPT', CSHARP: 'CSHARP', C: 'C', CPP: 'CPP' }[
+                    assignment.language ?? 'null'
+                  ]
+                }}
+              </td>
+              <td>{{ assignment.testCases }}</td>
+              <td>{{ assignment.maxScore }}</td>
+              <td>{{ assignment.isPreloaded }}</td>
+              <td>
+                @if (assignment.appUser) {
+                  <div>
+                    <a [routerLink]="['/app-user', assignment.appUser.id, 'view']">{{ assignment.appUser.name }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/assignment', assignment.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                  </a>
+
+                  <a [routerLink]="['/assignment', assignment.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(assignment)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (assignments && assignments.length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems"
+          [page]="page"
+          [pageSize]="itemsPerPage"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        ></ngb-pagination>
+      </div>
+    </div>
+  }
+</div>

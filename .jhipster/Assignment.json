@@ -1,0 +1,78 @@
+{
+  "annotations": {
+    "changelogDate": "20241231202044"
+  },
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "difficulty",
+      "fieldType": "difficulty",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "BEGINNER,MEDIUM,HARD"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "TextBlob",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "language",
+      "fieldType": "ProgrammingLanguage",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "JAVA,PYTHON,JAVASCRIPT,CSHARP,C,CPP"
+    },
+    {
+      "fieldName": "testCases",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "maxScore",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "isPreloaded",
+      "fieldType": "Boolean"
+    }
+  ],
+  "jpaMetamodelFiltering": true,
+  "name": "Assignment",
+  "pagination": "pagination",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityField": "name",
+      "otherEntityName": "appUser",
+      "otherEntityRelationshipName": "assignments",
+      "relationshipName": "appUser",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipValidateRules": ["required"]
+    },
+    {
+      "otherEntityField": "className",
+      "otherEntityName": "studentClass",
+      "otherEntityRelationshipName": "assignments",
+      "relationshipName": "studentClasses",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many",
+      "relationshipValidateRules": ["required"]
+    },
+    {
+      "otherEntityField": "id",
+      "otherEntityName": "userQuestion",
+      "otherEntityRelationshipName": "assignment",
+      "relationshipName": "userQuestions",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "service": "serviceImpl"
+}

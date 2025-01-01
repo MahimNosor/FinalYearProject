@@ -450,8 +450,6 @@ class QuestionResourceIT {
         Question partialUpdatedQuestion = new Question();
         partialUpdatedQuestion.setId(question.getId());
 
-        partialUpdatedQuestion.difficulty(UPDATED_DIFFICULTY).testCases(UPDATED_TEST_CASES);
-
         restQuestionMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedQuestion.getId())

@@ -1,9 +1,11 @@
 package com.mycompany.myapp.service.mapper;
 
 import com.mycompany.myapp.domain.AppUser;
+import com.mycompany.myapp.domain.Assignment;
 import com.mycompany.myapp.domain.Question;
 import com.mycompany.myapp.domain.UserQuestion;
 import com.mycompany.myapp.service.dto.AppUserDTO;
+import com.mycompany.myapp.service.dto.AssignmentDTO;
 import com.mycompany.myapp.service.dto.QuestionDTO;
 import com.mycompany.myapp.service.dto.UserQuestionDTO;
 import org.mapstruct.*;
@@ -15,6 +17,7 @@ import org.mapstruct.*;
 public interface UserQuestionMapper extends EntityMapper<UserQuestionDTO, UserQuestion> {
     @Mapping(target = "appUser", source = "appUser", qualifiedByName = "appUserId")
     @Mapping(target = "question", source = "question", qualifiedByName = "questionId")
+    @Mapping(target = "assignment", source = "assignment", qualifiedByName = "assignmentId")
     UserQuestionDTO toDto(UserQuestion s);
 
     @Named("appUserId")
@@ -26,4 +29,9 @@ public interface UserQuestionMapper extends EntityMapper<UserQuestionDTO, UserQu
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     QuestionDTO toDtoQuestionId(Question question);
+
+    @Named("assignmentId")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    AssignmentDTO toDtoAssignmentId(Assignment assignment);
 }

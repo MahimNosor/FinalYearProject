@@ -11,6 +11,8 @@ import { IAppUser } from 'app/entities/app-user/app-user.model';
 import { AppUserService } from 'app/entities/app-user/service/app-user.service';
 import { IQuestion } from 'app/entities/question/question.model';
 import { QuestionService } from 'app/entities/question/service/question.service';
+import { IAssignment } from 'app/entities/assignment/assignment.model';
+import { AssignmentService } from 'app/entities/assignment/service/assignment.service';
 import { SubmissionStatus } from 'app/entities/enumerations/submission-status.model';
 import { UserQuestionService } from '../service/user-question.service';
 import { IUserQuestion } from '../user-question.model';
@@ -29,11 +31,13 @@ export class UserQuestionUpdateComponent implements OnInit {
 
   appUsersSharedCollection: IAppUser[] = [];
   questionsSharedCollection: IQuestion[] = [];
+  assignmentsSharedCollection: IAssignment[] = [];
 
   protected userQuestionService = inject(UserQuestionService);
   protected userQuestionFormService = inject(UserQuestionFormService);
   protected appUserService = inject(AppUserService);
   protected questionService = inject(QuestionService);
+  protected assignmentService = inject(AssignmentService);
   protected activatedRoute = inject(ActivatedRoute);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
@@ -42,6 +46,8 @@ export class UserQuestionUpdateComponent implements OnInit {
   compareAppUser = (o1: IAppUser | null, o2: IAppUser | null): boolean => this.appUserService.compareAppUser(o1, o2);
 
   compareQuestion = (o1: IQuestion | null, o2: IQuestion | null): boolean => this.questionService.compareQuestion(o1, o2);
+
+  compareAssignment = (o1: IAssignment | null, o2: IAssignment | null): boolean => this.assignmentService.compareAssignment(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ userQuestion }) => {
@@ -99,6 +105,10 @@ export class UserQuestionUpdateComponent implements OnInit {
       this.questionsSharedCollection,
       userQuestion.question,
     );
+    this.assignmentsSharedCollection = this.assignmentService.addAssignmentToCollectionIfMissing<IAssignment>(
+      this.assignmentsSharedCollection,
+      userQuestion.assignment,
+    );
   }
 
   protected loadRelationshipsOptions(): void {
@@ -119,5 +129,15 @@ export class UserQuestionUpdateComponent implements OnInit {
         ),
       )
       .subscribe((questions: IQuestion[]) => (this.questionsSharedCollection = questions));
+
+    this.assignmentService
+      .query()
+      .pipe(map((res: HttpResponse<IAssignment[]>) => res.body ?? []))
+      .pipe(
+        map((assignments: IAssignment[]) =>
+          this.assignmentService.addAssignmentToCollectionIfMissing<IAssignment>(assignments, this.userQuestion?.assignment),
+        ),
+      )
+      .subscribe((assignments: IAssignment[]) => (this.assignmentsSharedCollection = assignments));
   }
 }

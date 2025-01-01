@@ -23,6 +23,8 @@ public class UserQuestionDTO implements Serializable {
 
     private QuestionDTO question;
 
+    private AssignmentDTO assignment;
+
     public Long getId() {
         return id;
     }
@@ -71,6 +73,14 @@ public class UserQuestionDTO implements Serializable {
         this.question = question;
     }
 
+    public AssignmentDTO getAssignment() {
+        return assignment;
+    }
+
+    public void setAssignment(AssignmentDTO assignment) {
+        this.assignment = assignment;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -102,6 +112,7 @@ public class UserQuestionDTO implements Serializable {
             ", status='" + getStatus() + "'" +
             ", appUser=" + getAppUser() +
             ", question=" + getQuestion() +
+            ", assignment=" + getAssignment() +
             "}";
     }
 }

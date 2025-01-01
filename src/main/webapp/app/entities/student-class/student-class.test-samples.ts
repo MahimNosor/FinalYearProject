@@ -1,22 +1,22 @@
 import { IStudentClass, NewStudentClass } from './student-class.model';
 
 export const sampleWithRequiredData: IStudentClass = {
-  id: 24472,
-  className: 'depart',
+  id: 5173,
+  className: 'fowl',
 };
 
 export const sampleWithPartialData: IStudentClass = {
-  id: 7962,
-  className: 'ponder dull',
+  id: 26873,
+  className: 'regular',
 };
 
 export const sampleWithFullData: IStudentClass = {
-  id: 13149,
-  className: 'amid',
+  id: 7211,
+  className: 'near why',
 };
 
 export const sampleWithNewData: NewStudentClass = {
-  className: 'oof jazz',
+  className: 'reproachfully instead',
   id: null,
 };
 

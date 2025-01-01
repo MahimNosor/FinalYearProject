@@ -1,0 +1,207 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-assignment-heading"
+        data-cy="AssignmentCreateUpdateHeading"
+        jhiTranslate="finalYearProjectApp.assignment.home.createOrEditLabel"
+      >
+        Create or edit a Assignment
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="finalYearProjectApp.assignment.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let titleRef = editForm.get('title')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_title" jhiTranslate="finalYearProjectApp.assignment.title">Title</label>
+          <input type="text" class="form-control" name="title" id="field_title" data-cy="title" formControlName="title" />
+          @if (titleRef.invalid && (titleRef.dirty || titleRef.touched)) {
+            <div>
+              @if (editForm.get('title')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let difficultyRef = editForm.get('difficulty')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_difficulty" jhiTranslate="finalYearProjectApp.assignment.difficulty">Difficulty</label>
+          <select class="form-control" name="difficulty" formControlName="difficulty" id="field_difficulty" data-cy="difficulty">
+            <option [ngValue]="null">{{ 'finalYearProjectApp.difficulty.null' | translate }}</option>
+            @for (difficulty of difficultyValues; track $index) {
+              <option [value]="difficulty">{{ 'finalYearProjectApp.difficulty.' + difficulty | translate }}</option>
+            }
+          </select>
+          @if (difficultyRef.invalid && (difficultyRef.dirty || difficultyRef.touched)) {
+            <div>
+              @if (editForm.get('difficulty')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let descriptionRef = editForm.get('description')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_description" jhiTranslate="finalYearProjectApp.assignment.description">Description</label>
+          <textarea
+            class="form-control"
+            name="description"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
+          ></textarea>
+          @if (descriptionRef.invalid && (descriptionRef.dirty || descriptionRef.touched)) {
+            <div>
+              @if (editForm.get('description')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let languageRef = editForm.get('language')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_language" jhiTranslate="finalYearProjectApp.assignment.language">Language</label>
+          <select class="form-control" name="language" formControlName="language" id="field_language" data-cy="language">
+            <option [ngValue]="null">{{ 'finalYearProjectApp.ProgrammingLanguage.null' | translate }}</option>
+            @for (programmingLanguage of programmingLanguageValues; track $index) {
+              <option [value]="programmingLanguage">
+                {{ 'finalYearProjectApp.ProgrammingLanguage.' + programmingLanguage | translate }}
+              </option>
+            }
+          </select>
+          @if (languageRef.invalid && (languageRef.dirty || languageRef.touched)) {
+            <div>
+              @if (editForm.get('language')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let testCasesRef = editForm.get('testCases')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_testCases" jhiTranslate="finalYearProjectApp.assignment.testCases">Test Cases</label>
+          <textarea class="form-control" name="testCases" id="field_testCases" data-cy="testCases" formControlName="testCases"></textarea>
+          @if (testCasesRef.invalid && (testCasesRef.dirty || testCasesRef.touched)) {
+            <div>
+              @if (editForm.get('testCases')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let maxScoreRef = editForm.get('maxScore')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_maxScore" jhiTranslate="finalYearProjectApp.assignment.maxScore">Max Score</label>
+          <input type="number" class="form-control" name="maxScore" id="field_maxScore" data-cy="maxScore" formControlName="maxScore" />
+          @if (maxScoreRef.invalid && (maxScoreRef.dirty || maxScoreRef.touched)) {
+            <div>
+              @if (editForm.get('maxScore')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('maxScore')?.errors?.number"
+                jhiTranslate="entity.validation.number"
+                >This field should be a number.</small
+              >
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_isPreloaded" jhiTranslate="finalYearProjectApp.assignment.isPreloaded">Is Preloaded</label>
+          <input
+            type="checkbox"
+            class="form-check"
+            name="isPreloaded"
+            id="field_isPreloaded"
+            data-cy="isPreloaded"
+            formControlName="isPreloaded"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_appUser" jhiTranslate="finalYearProjectApp.assignment.appUser">App User</label>
+          <select
+            class="form-control"
+            id="field_appUser"
+            data-cy="appUser"
+            name="appUser"
+            formControlName="appUser"
+            [compareWith]="compareAppUser"
+          >
+            @if (editForm.get(['appUser'])!.value == null) {
+              <option [ngValue]="null" selected></option>
+            }
+            @for (appUserOption of appUsersSharedCollection; track $index) {
+              <option [ngValue]="appUserOption">{{ appUserOption.name }}</option>
+            }
+          </select>
+        </div>
+        @if (editForm.get(['appUser'])!.invalid && (editForm.get(['appUser'])!.dirty || editForm.get(['appUser'])!.touched)) {
+          <div>
+            @if (editForm.get(['appUser'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
+
+        <div class="mb-3">
+          <label for="field_studentClasses" jhiTranslate="finalYearProjectApp.assignment.studentClasses">Student Classes</label>
+          <select
+            class="form-control"
+            id="field_studentClasses"
+            data-cy="studentClasses"
+            multiple
+            name="studentClasses"
+            formControlName="studentClasses"
+            [compareWith]="compareStudentClass"
+          >
+            @for (studentClassOption of studentClassesSharedCollection; track $index) {
+              <option [ngValue]="studentClassOption">{{ studentClassOption.className }}</option>
+            }
+          </select>
+        </div>
+        @if (
+          editForm.get(['studentClasses'])!.invalid &&
+          (editForm.get(['studentClasses'])!.dirty || editForm.get(['studentClasses'])!.touched)
+        ) {
+          <div>
+            @if (editForm.get(['studentClasses'])?.errors?.required) {
+              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
+            }
+          </div>
+        }
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

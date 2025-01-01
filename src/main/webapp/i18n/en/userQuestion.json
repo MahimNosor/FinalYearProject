@@ -23,7 +23,8 @@
       "submissionDate": "Submission Date",
       "status": "Status",
       "appUser": "App User",
-      "question": "Question"
+      "question": "Question",
+      "assignment": "Assignment"
     }
   }
 }

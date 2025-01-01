@@ -60,15 +60,8 @@ public class Question implements Serializable {
     private Integer maxScore;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "users" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "users", "assignments" }, allowSetters = true)
     private StudentClass studentClass;
-
-    @ManyToOne
-    @JoinColumn(name = "app_user_id", nullable = true)
-    private AppUser appUser;
-
-    @Column(name = "is_preloaded", nullable = false)
-    private Boolean isPreloaded = false;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -174,22 +167,6 @@ public class Question implements Serializable {
     public Question studentClass(StudentClass studentClass) {
         this.setStudentClass(studentClass);
         return this;
-    }
-
-    public Boolean getIsPreloaded() {
-        return isPreloaded;
-    }
-
-    public void setIsPreloaded(Boolean isPreloaded) {
-        this.isPreloaded = isPreloaded;
-    }
-
-    public AppUser getAppUser() {
-        return appUser;
-    }
-
-    public void setAppUser(AppUser appUser) {
-        this.appUser = appUser;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

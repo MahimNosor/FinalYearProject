@@ -104,6 +104,12 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
+            <th scope="col" jhiSortBy="assignment.id">
+              <div class="d-flex">
+                <span jhiTranslate="finalYearProjectApp.userQuestion.assignment">Assignment</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -138,6 +144,13 @@
                 @if (userQuestion.question) {
                   <div>
                     <a [routerLink]="['/question', userQuestion.question.id, 'view']">{{ userQuestion.question.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (userQuestion.assignment) {
+                  <div>
+                    <a [routerLink]="['/assignment', userQuestion.assignment.id, 'view']">{{ userQuestion.assignment.id }}</a>
                   </div>
                 }
               </td>

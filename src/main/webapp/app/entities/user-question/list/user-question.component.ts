@@ -37,10 +37,10 @@ export class UserQuestionComponent implements OnInit {
   sortState = sortStateSignal({});
   currentSearch = '';
 
-  public router = inject(Router);
-  protected userQuestionService = inject(UserQuestionService);
-  protected activatedRoute = inject(ActivatedRoute);
-  protected sortService = inject(SortService);
+  public readonly router = inject(Router);
+  protected readonly userQuestionService = inject(UserQuestionService);
+  protected readonly activatedRoute = inject(ActivatedRoute);
+  protected readonly sortService = inject(SortService);
   protected modalService = inject(NgbModal);
   protected ngZone = inject(NgZone);
 

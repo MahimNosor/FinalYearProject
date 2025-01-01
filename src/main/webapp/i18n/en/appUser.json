@@ -24,7 +24,8 @@
       "password": "Password",
       "roles": "Roles",
       "points": "Points",
-      "classes": "Classes"
+      "classes": "Classes",
+      "assignments": "Assignments"
     }
   }
 }

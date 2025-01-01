@@ -342,6 +342,8 @@ class StudentClassResourceIT {
         StudentClass partialUpdatedStudentClass = new StudentClass();
         partialUpdatedStudentClass.setId(studentClass.getId());
 
+        partialUpdatedStudentClass.className(UPDATED_CLASS_NAME);
+
         restStudentClassMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedStudentClass.getId())

@@ -22,6 +22,7 @@ describe('StudentClass Form Service', () => {
             id: expect.any(Object),
             className: expect.any(Object),
             users: expect.any(Object),
+            assignments: expect.any(Object),
           }),
         );
       });
@@ -34,6 +35,7 @@ describe('StudentClass Form Service', () => {
             id: expect.any(Object),
             className: expect.any(Object),
             users: expect.any(Object),
+            assignments: expect.any(Object),
           }),
         );
       });

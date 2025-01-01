@@ -36,6 +36,7 @@ type UserQuestionFormGroupContent = {
   status: FormControl<UserQuestionFormRawValue['status']>;
   appUser: FormControl<UserQuestionFormRawValue['appUser']>;
   question: FormControl<UserQuestionFormRawValue['question']>;
+  assignment: FormControl<UserQuestionFormRawValue['assignment']>;
 };
 
 export type UserQuestionFormGroup = FormGroup<UserQuestionFormGroupContent>;
@@ -60,6 +61,7 @@ export class UserQuestionFormService {
       status: new FormControl(userQuestionRawValue.status),
       appUser: new FormControl(userQuestionRawValue.appUser),
       question: new FormControl(userQuestionRawValue.question),
+      assignment: new FormControl(userQuestionRawValue.assignment),
     });
   }
 

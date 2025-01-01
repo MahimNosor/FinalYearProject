@@ -8,6 +8,8 @@ import { IAppUser } from 'app/entities/app-user/app-user.model';
 import { AppUserService } from 'app/entities/app-user/service/app-user.service';
 import { IQuestion } from 'app/entities/question/question.model';
 import { QuestionService } from 'app/entities/question/service/question.service';
+import { IAssignment } from 'app/entities/assignment/assignment.model';
+import { AssignmentService } from 'app/entities/assignment/service/assignment.service';
 import { IUserQuestion } from '../user-question.model';
 import { UserQuestionService } from '../service/user-question.service';
 import { UserQuestionFormService } from './user-question-form.service';
@@ -22,6 +24,7 @@ describe('UserQuestion Management Update Component', () => {
   let userQuestionService: UserQuestionService;
   let appUserService: AppUserService;
   let questionService: QuestionService;
+  let assignmentService: AssignmentService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -46,6 +49,7 @@ describe('UserQuestion Management Update Component', () => {
     userQuestionService = TestBed.inject(UserQuestionService);
     appUserService = TestBed.inject(AppUserService);
     questionService = TestBed.inject(QuestionService);
+    assignmentService = TestBed.inject(AssignmentService);
 
     comp = fixture.componentInstance;
   });
@@ -53,10 +57,10 @@ describe('UserQuestion Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call AppUser query and add missing value', () => {
       const userQuestion: IUserQuestion = { id: 456 };
-      const appUser: IAppUser = { id: 23543 };
+      const appUser: IAppUser = { id: 11801 };
       userQuestion.appUser = appUser;
 
-      const appUserCollection: IAppUser[] = [{ id: 30887 }];
+      const appUserCollection: IAppUser[] = [{ id: 14782 }];
       jest.spyOn(appUserService, 'query').mockReturnValue(of(new HttpResponse({ body: appUserCollection })));
       const additionalAppUsers = [appUser];
       const expectedCollection: IAppUser[] = [...additionalAppUsers, ...appUserCollection];
@@ -75,10 +79,10 @@ describe('UserQuestion Management Update Component', () => {
 
     it('Should call Question query and add missing value', () => {
       const userQuestion: IUserQuestion = { id: 456 };
-      const question: IQuestion = { id: 9946 };
+      const question: IQuestion = { id: 8561 };
       userQuestion.question = question;
 
-      const questionCollection: IQuestion[] = [{ id: 3346 }];
+      const questionCollection: IQuestion[] = [{ id: 32006 }];
       jest.spyOn(questionService, 'query').mockReturnValue(of(new HttpResponse({ body: questionCollection })));
       const additionalQuestions = [question];
       const expectedCollection: IQuestion[] = [...additionalQuestions, ...questionCollection];
@@ -95,18 +99,43 @@ describe('UserQuestion Management Update Component', () => {
       expect(comp.questionsSharedCollection).toEqual(expectedCollection);
     });
 
+    it('Should call Assignment query and add missing value', () => {
+      const userQuestion: IUserQuestion = { id: 456 };
+      const assignment: IAssignment = { id: 21927 };
+      userQuestion.assignment = assignment;
+
+      const assignmentCollection: IAssignment[] = [{ id: 3204 }];
+      jest.spyOn(assignmentService, 'query').mockReturnValue(of(new HttpResponse({ body: assignmentCollection })));
+      const additionalAssignments = [assignment];
+      const expectedCollection: IAssignment[] = [...additionalAssignments, ...assignmentCollection];
+      jest.spyOn(assignmentService, 'addAssignmentToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ userQuestion });
+      comp.ngOnInit();
+
+      expect(assignmentService.query).toHaveBeenCalled();
+      expect(assignmentService.addAssignmentToCollectionIfMissing).toHaveBeenCalledWith(
+        assignmentCollection,
+        ...additionalAssignments.map(expect.objectContaining),
+      );
+      expect(comp.assignmentsSharedCollection).toEqual(expectedCollection);
+    });
+
     it('Should update editForm', () => {
       const userQuestion: IUserQuestion = { id: 456 };
-      const appUser: IAppUser = { id: 2583 };
+      const appUser: IAppUser = { id: 31807 };
       userQuestion.appUser = appUser;
-      const question: IQuestion = { id: 4160 };
+      const question: IQuestion = { id: 27026 };
       userQuestion.question = question;
+      const assignment: IAssignment = { id: 6602 };
+      userQuestion.assignment = assignment;
 
       activatedRoute.data = of({ userQuestion });
       comp.ngOnInit();
 
       expect(comp.appUsersSharedCollection).toContain(appUser);
       expect(comp.questionsSharedCollection).toContain(question);
+      expect(comp.assignmentsSharedCollection).toContain(assignment);
       expect(comp.userQuestion).toEqual(userQuestion);
     });
   });
@@ -197,6 +226,16 @@ describe('UserQuestion Management Update Component', () => {
         jest.spyOn(questionService, 'compareQuestion');
         comp.compareQuestion(entity, entity2);
         expect(questionService.compareQuestion).toHaveBeenCalledWith(entity, entity2);
+      });
+    });
+
+    describe('compareAssignment', () => {
+      it('Should forward to assignmentService', () => {
+        const entity = { id: 123 };
+        const entity2 = { id: 456 };
+        jest.spyOn(assignmentService, 'compareAssignment');
+        comp.compareAssignment(entity, entity2);
+        expect(assignmentService.compareAssignment).toHaveBeenCalledWith(entity, entity2);
       });
     });
   });

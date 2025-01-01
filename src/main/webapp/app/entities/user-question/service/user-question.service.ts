@@ -29,8 +29,8 @@ export type EntityArrayResponseType = HttpResponse<IUserQuestion[]>;
 
 @Injectable({ providedIn: 'root' })
 export class UserQuestionService {
-  protected http = inject(HttpClient);
-  protected applicationConfigService = inject(ApplicationConfigService);
+  protected readonly http = inject(HttpClient);
+  protected readonly applicationConfigService = inject(ApplicationConfigService);
 
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/user-questions');
   protected resourceSearchUrl = this.applicationConfigService.getEndpointFor('api/user-questions/_search');

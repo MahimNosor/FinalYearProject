@@ -334,7 +334,7 @@ class UserQuestionResourceIT {
         UserQuestion partialUpdatedUserQuestion = new UserQuestion();
         partialUpdatedUserQuestion.setId(userQuestion.getId());
 
-        partialUpdatedUserQuestion.submissionDate(UPDATED_SUBMISSION_DATE).status(UPDATED_STATUS);
+        partialUpdatedUserQuestion.score(UPDATED_SCORE).status(UPDATED_STATUS);
 
         restUserQuestionMockMvc
             .perform(

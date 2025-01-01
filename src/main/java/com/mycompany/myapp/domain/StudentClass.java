@@ -35,12 +35,18 @@ public class StudentClass implements Serializable {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "classes")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @org.springframework.data.annotation.Transient
-    @JsonIgnoreProperties(value = { "classes" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "classes", "assignments" }, allowSetters = true)
     private Set<AppUser> users = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "app_user_id", nullable = true)
     private AppUser appUser;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "studentClasses")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @org.springframework.data.annotation.Transient
+    @JsonIgnoreProperties(value = { "appUser", "studentClasses", "userQuestions" }, allowSetters = true)
+    private Set<Assignment> assignments = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -104,9 +110,39 @@ public class StudentClass implements Serializable {
     public AppUser getAppUser() {
         return this.appUser;
     }
+    public Set<Assignment> getAssignments() {
+        return this.assignments;
+     }
 
     public void setAppUser(AppUser appUser) {
         this.appUser = appUser;
+    }
+
+    public void setAssignments(Set<Assignment> assignments) {
+        if (this.assignments != null) {
+            this.assignments.forEach(i -> i.removeStudentClasses(this));
+        }
+        if (assignments != null) {
+            assignments.forEach(i -> i.addStudentClasses(this));
+        }
+        this.assignments = assignments;
+     }
+
+     public StudentClass assignments(Set<Assignment> assignments) {
+        this.setAssignments(assignments);
+        return this;
+    }
+
+    public StudentClass addAssignments(Assignment assignment) {
+        this.assignments.add(assignment);
+        assignment.getStudentClasses().add(this);
+        return this;
+    }
+
+    public StudentClass removeAssignments(Assignment assignment) {
+        this.assignments.remove(assignment);
+        assignment.getStudentClasses().remove(this);
+        return this;
     }
     
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

@@ -1,6 +1,7 @@
 package com.mycompany.myapp.domain;
 
 import static com.mycompany.myapp.domain.AppUserTestSamples.*;
+import static com.mycompany.myapp.domain.AssignmentTestSamples.*;
 import static com.mycompany.myapp.domain.QuestionTestSamples.*;
 import static com.mycompany.myapp.domain.UserQuestionTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,5 +47,17 @@ class UserQuestionTest {
 
         userQuestion.question(null);
         assertThat(userQuestion.getQuestion()).isNull();
+    }
+
+    @Test
+    void assignmentTest() {
+        UserQuestion userQuestion = getUserQuestionRandomSampleGenerator();
+        Assignment assignmentBack = getAssignmentRandomSampleGenerator();
+
+        userQuestion.setAssignment(assignmentBack);
+        assertThat(userQuestion.getAssignment()).isEqualTo(assignmentBack);
+
+        userQuestion.assignment(null);
+        assertThat(userQuestion.getAssignment()).isNull();
     }
 }

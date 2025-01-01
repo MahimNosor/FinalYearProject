@@ -48,6 +48,23 @@
             }
           </select>
         </div>
+
+        <div class="mb-3">
+          <label for="field_assignments" jhiTranslate="finalYearProjectApp.studentClass.assignments">Assignments</label>
+          <select
+            class="form-control"
+            id="field_assignments"
+            data-cy="assignments"
+            multiple
+            name="assignments"
+            formControlName="assignments"
+            [compareWith]="compareAssignment"
+          >
+            @for (assignmentOption of assignmentsSharedCollection; track $index) {
+              <option [ngValue]="assignmentOption">{{ assignmentOption.id }}</option>
+            }
+          </select>
+        </div>
       </div>
 
       <div>

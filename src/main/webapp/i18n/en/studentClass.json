@@ -20,7 +20,8 @@
       },
       "id": "ID",
       "className": "Class Name",
-      "users": "Users"
+      "users": "Users",
+      "assignments": "Assignments"
     }
   }
 }

@@ -39,12 +39,16 @@ public class UserQuestion implements Serializable {
     private SubmissionStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "classes" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "classes", "assignments" }, allowSetters = true)
     private AppUser appUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "studentClass" }, allowSetters = true)
     private Question question;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "appUser", "studentClasses", "userQuestions" }, allowSetters = true)
+    private Assignment assignment;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -123,6 +127,19 @@ public class UserQuestion implements Serializable {
 
     public UserQuestion question(Question question) {
         this.setQuestion(question);
+        return this;
+    }
+
+    public Assignment getAssignment() {
+        return this.assignment;
+    }
+
+    public void setAssignment(Assignment assignment) {
+        this.assignment = assignment;
+    }
+
+    public UserQuestion assignment(Assignment assignment) {
+        this.setAssignment(assignment);
         return this;
     }
 

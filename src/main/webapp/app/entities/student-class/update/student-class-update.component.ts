@@ -9,8 +9,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IAppUser } from 'app/entities/app-user/app-user.model';
 import { AppUserService } from 'app/entities/app-user/service/app-user.service';
-import { IStudentClass } from '../student-class.model';
+import { IAssignment } from 'app/entities/assignment/assignment.model';
+import { AssignmentService } from 'app/entities/assignment/service/assignment.service';
 import { StudentClassService } from '../service/student-class.service';
+import { IStudentClass } from '../student-class.model';
 import { StudentClassFormGroup, StudentClassFormService } from './student-class-form.service';
 
 @Component({
@@ -24,16 +26,20 @@ export class StudentClassUpdateComponent implements OnInit {
   studentClass: IStudentClass | null = null;
 
   appUsersSharedCollection: IAppUser[] = [];
+  assignmentsSharedCollection: IAssignment[] = [];
 
   protected studentClassService = inject(StudentClassService);
   protected studentClassFormService = inject(StudentClassFormService);
   protected appUserService = inject(AppUserService);
+  protected assignmentService = inject(AssignmentService);
   protected activatedRoute = inject(ActivatedRoute);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: StudentClassFormGroup = this.studentClassFormService.createStudentClassFormGroup();
 
   compareAppUser = (o1: IAppUser | null, o2: IAppUser | null): boolean => this.appUserService.compareAppUser(o1, o2);
+
+  compareAssignment = (o1: IAssignment | null, o2: IAssignment | null): boolean => this.assignmentService.compareAssignment(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ studentClass }) => {
@@ -87,6 +93,10 @@ export class StudentClassUpdateComponent implements OnInit {
       this.appUsersSharedCollection,
       ...(studentClass.users ?? []),
     );
+    this.assignmentsSharedCollection = this.assignmentService.addAssignmentToCollectionIfMissing<IAssignment>(
+      this.assignmentsSharedCollection,
+      ...(studentClass.assignments ?? []),
+    );
   }
 
   protected loadRelationshipsOptions(): void {
@@ -99,5 +109,15 @@ export class StudentClassUpdateComponent implements OnInit {
         ),
       )
       .subscribe((appUsers: IAppUser[]) => (this.appUsersSharedCollection = appUsers));
+
+    this.assignmentService
+      .query()
+      .pipe(map((res: HttpResponse<IAssignment[]>) => res.body ?? []))
+      .pipe(
+        map((assignments: IAssignment[]) =>
+          this.assignmentService.addAssignmentToCollectionIfMissing<IAssignment>(assignments, ...(this.studentClass?.assignments ?? [])),
+        ),
+      )
+      .subscribe((assignments: IAssignment[]) => (this.assignmentsSharedCollection = assignments));
   }
 }

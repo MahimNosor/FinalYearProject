@@ -1,0 +1,81 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (assignment(); as assignmentRef) {
+      <div>
+        <h2 data-cy="assignmentDetailsHeading"><span jhiTranslate="finalYearProjectApp.assignment.detail.title">Assignment</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ assignmentRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.assignment.title">Title</span></dt>
+          <dd>
+            <span>{{ assignmentRef.title }}</span>
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.assignment.difficulty">Difficulty</span></dt>
+          <dd>
+            <span [jhiTranslate]="'finalYearProjectApp.difficulty.' + (assignmentRef.difficulty ?? 'null')">{{
+              { null: '', BEGINNER: 'BEGINNER', MEDIUM: 'MEDIUM', HARD: 'HARD' }[assignmentRef.difficulty ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.assignment.description">Description</span></dt>
+          <dd>
+            <span>{{ assignmentRef.description }}</span>
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.assignment.language">Language</span></dt>
+          <dd>
+            <span [jhiTranslate]="'finalYearProjectApp.ProgrammingLanguage.' + (assignmentRef.language ?? 'null')">{{
+              { null: '', JAVA: 'JAVA', PYTHON: 'PYTHON', JAVASCRIPT: 'JAVASCRIPT', CSHARP: 'CSHARP', C: 'C', CPP: 'CPP' }[
+                assignmentRef.language ?? 'null'
+              ]
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.assignment.testCases">Test Cases</span></dt>
+          <dd>
+            <span>{{ assignmentRef.testCases }}</span>
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.assignment.maxScore">Max Score</span></dt>
+          <dd>
+            <span>{{ assignmentRef.maxScore }}</span>
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.assignment.isPreloaded">Is Preloaded</span></dt>
+          <dd>
+            <span>{{ assignmentRef.isPreloaded }}</span>
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.assignment.appUser">App User</span></dt>
+          <dd>
+            @if (assignment()!.appUser) {
+              <div>
+                <a [routerLink]="['/app-user', assignment()!.appUser?.id, 'view']">{{ assignmentRef.appUser?.name }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="finalYearProjectApp.assignment.studentClasses">Student Classes</span></dt>
+          <dd>
+            @for (studentClasses of assignmentRef.studentClasses; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/student-class', studentClasses.id, 'view']">{{ studentClasses?.className }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/assignment', assignmentRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

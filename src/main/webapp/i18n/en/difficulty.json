@@ -1,0 +1,10 @@
+{
+  "finalYearProjectApp": {
+    "difficulty": {
+      "null": "",
+      "BEGINNER": "BEGINNER",
+      "MEDIUM": "MEDIUM",
+      "HARD": "HARD"
+    }
+  }
+}

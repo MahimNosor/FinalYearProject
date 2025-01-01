@@ -23,5 +23,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="question"
                                  />
+
+        <addForeignKeyConstraint baseColumnNames="assignment_id"
+                                 baseTableName="user_question"
+                                 constraintName="fk_user_question__assignment_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="assignment"
+                                 />
     </changeSet>
 </databaseChangeLog>

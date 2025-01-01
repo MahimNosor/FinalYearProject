@@ -1,0 +1,11 @@
+id;title;difficulty;description;language;test_cases;max_score;is_preloaded;app_user_id
+1;sentimental among likewise;MEDIUM;../fake-data/blob/hipster.txt;CSHARP;../fake-data/blob/hipster.txt;1815;true;1
+2;honorable ethical whoa;MEDIUM;../fake-data/blob/hipster.txt;C;../fake-data/blob/hipster.txt;19697;true;2
+3;gee except;BEGINNER;../fake-data/blob/hipster.txt;PYTHON;../fake-data/blob/hipster.txt;32510;true;3
+4;aw;MEDIUM;../fake-data/blob/hipster.txt;CSHARP;../fake-data/blob/hipster.txt;29211;false;4
+5;atop next yearly;BEGINNER;../fake-data/blob/hipster.txt;CPP;../fake-data/blob/hipster.txt;15614;true;5
+6;firm;HARD;../fake-data/blob/hipster.txt;CSHARP;../fake-data/blob/hipster.txt;31645;false;6
+7;amendment;HARD;../fake-data/blob/hipster.txt;C;../fake-data/blob/hipster.txt;15829;true;7
+8;eek reckless generally;BEGINNER;../fake-data/blob/hipster.txt;CSHARP;../fake-data/blob/hipster.txt;31729;true;8
+9;cheese bleakly;MEDIUM;../fake-data/blob/hipster.txt;JAVASCRIPT;../fake-data/blob/hipster.txt;17999;false;9
+10;yuck lest incomplete;BEGINNER;../fake-data/blob/hipster.txt;CPP;../fake-data/blob/hipster.txt;6092;false;10

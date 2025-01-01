@@ -7,6 +7,8 @@ import com.mycompany.myapp.service.dto.StudentClassDTO;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.*;
+import com.mycompany.myapp.domain.Assignment;
+import com.mycompany.myapp.service.dto.AssignmentDTO;
 
 /**
  * Mapper for the entity {@link StudentClass} and its DTO {@link StudentClassDTO}.
@@ -15,11 +17,14 @@ import org.mapstruct.*;
 public interface StudentClassMapper extends EntityMapper<StudentClassDTO, StudentClass> {
     @Mapping(target = "users", source = "users", qualifiedByName = "appUserIdSet")
     @Mapping(target = "appUserId", source = "appUser.id")
+    @Mapping(target = "assignments", source = "assignments", qualifiedByName = "assignmentIdSet")
     StudentClassDTO toDto(StudentClass s);
 
     @Mapping(target = "users", ignore = true)
     @Mapping(target = "removeUsers", ignore = true)
     @Mapping(target = "appUser", source = "appUserId")
+    @Mapping(target = "assignments", ignore = true)
+    @Mapping(target = "removeAssignments", ignore = true)
     StudentClass toEntity(StudentClassDTO studentClassDTO);
 
     @Named("appUserId")
@@ -41,9 +46,17 @@ public interface StudentClassMapper extends EntityMapper<StudentClassDTO, Studen
         appUser.setId(value);
         return appUser;
     }
+        @Named("assignmentId")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    AssignmentDTO toDtoAssignmentId(Assignment assignment);
 
     // Manual mapping method for AppUser to Long
     default Long map(AppUser appUser) {
         return appUser == null ? null : appUser.getId();
+    }
+        @Named("assignmentIdSet")
+    default Set<AssignmentDTO> toDtoAssignmentIdSet(Set<Assignment> assignment) {
+        return assignment.stream().map(this::toDtoAssignmentId).collect(Collectors.toSet());
     }
 }

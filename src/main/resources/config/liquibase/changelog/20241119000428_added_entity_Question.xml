@@ -21,7 +21,7 @@
                 <constraints nullable="false" />
             </column>
             <column name="description" type="${clobType}">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <column name="language" type="varchar(255)">
                 <constraints nullable="false" />
@@ -34,12 +34,6 @@
             </column>
             <column name="student_class_id" type="bigint">
                 <constraints nullable="true" />
-            </column>
-            <column name="app_user_id" type="BIGINT">
-                <constraints nullable="true"/>
-            </column>
-            <column name="is_preloaded" type="boolean" defaultValue="false">
-                <constraints nullable="false"/>
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
