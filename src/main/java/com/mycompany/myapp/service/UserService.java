@@ -152,6 +152,7 @@ public class UserService {
         appUser.setPassword(encryptedPassword); // Use the already encrypted password
         appUser.setRoles("ROLE_USER"); // Set default role
         appUser.setPoints(0); // Initialize points to 0
+        appUser.setUser(newUser);
         appUserRepository.save(appUser);
 
         newUser.addAppUser(appUser);

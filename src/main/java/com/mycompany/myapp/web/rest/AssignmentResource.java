@@ -34,6 +34,8 @@ import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.domain.StudentClass;
 import com.mycompany.myapp.domain.User;
 import com.mycompany.myapp.domain.AppUser;
+import com.mycompany.myapp.service.dto.AppUserDTO;
+import com.mycompany.myapp.service.mapper.AppUserMapper;
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.Assignment}.
@@ -55,6 +57,8 @@ public class AssignmentResource {
 
     private final AssignmentQueryService assignmentQueryService;
 
+    private final AppUserMapper appUserMapper;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -65,11 +69,13 @@ public class AssignmentResource {
     public AssignmentResource(
         AssignmentService assignmentService,
         AssignmentRepository assignmentRepository,
-        AssignmentQueryService assignmentQueryService
+        AssignmentQueryService assignmentQueryService,
+        AppUserMapper appUserMapper
     ) {
         this.assignmentService = assignmentService;
         this.assignmentRepository = assignmentRepository;
         this.assignmentQueryService = assignmentQueryService;
+        this.appUserMapper = appUserMapper;
     }
 
     /**
@@ -80,12 +86,20 @@ public class AssignmentResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<AssignmentDTO> createAssignment(@RequestBody AssignmentDTO assignmentDTO) {
+    public ResponseEntity<AssignmentDTO> createAssignment(@RequestBody AssignmentDTO assignmentDTO) throws URISyntaxException {
         LOG.debug("REST request to save Assignment : {}", assignmentDTO);
 
         // Fetch current user's AppUser ID
         String currentUserLogin = SecurityUtils.getCurrentUserLogin()
             .orElseThrow(() -> new RuntimeException("Current user login not found"));
+
+        if (currentUserLogin.equals("admin")) {
+            AssignmentDTO result = assignmentService.save(assignmentDTO);
+            return ResponseEntity
+                .created(new URI("/api/assignments/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "Assignment", result.getId().toString()))
+                .body(result);
+        }
 
         User currentUser = userRepository.findOneByLogin(currentUserLogin)
             .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
@@ -95,7 +109,8 @@ public class AssignmentResource {
 
         // Assign the assignment to the teacher
         if (appUser.getRoles().contains("ROLE_TEACHER")) {
-        assignmentDTO.setAppUserId(appUser.getId());
+            AppUserDTO appUserDTO = appUserMapper.toDto(appUser); // Convert AppUser to AppUserDTO
+            assignmentDTO.setAppUser(appUserDTO);
         }
         AssignmentDTO result = assignmentService.save(assignmentDTO);
         return ResponseEntity
