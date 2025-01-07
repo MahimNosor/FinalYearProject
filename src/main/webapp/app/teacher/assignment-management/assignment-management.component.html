@@ -1,0 +1,30 @@
+<div class="assignment-management-container">
+    <h2>Assignment Management</h2>
+  
+    <button class="btn btn-primary" (click)="createAssignment()">Create Assignment</button>
+  
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Preloaded</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let assignment of assignments; index as i">
+          <td>{{ i + 1 }}</td>
+          <td>{{ assignment.title }}</td>
+          <td>{{ assignment.description }}</td>
+          <td>{{ assignment.isPreloaded ? 'Yes' : 'No' }}</td>
+          <td>
+            <button (click)="editAssignment(assignment)" class="btn btn-warning" *ngIf="!assignment.isPreloaded">Edit</button>
+            <button (click)="deleteAssignment(assignment.id)" class="btn btn-danger" *ngIf="!assignment.isPreloaded">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

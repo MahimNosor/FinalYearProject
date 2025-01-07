@@ -1,0 +1,46 @@
+.assignment-management-container {
+    margin: 20px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+  
+    th {
+      background-color: #f4f4f4;
+    }
+  
+    .btn-warning {
+      background-color: #f0ad4e;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+  
+    .btn-danger {
+      background-color: #d9534f;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+  
+    .btn-primary {
+      background-color: #0275d8;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+  }
+  

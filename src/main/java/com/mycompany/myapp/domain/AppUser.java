@@ -67,8 +67,6 @@ public class AppUser implements Serializable {
     @JsonIgnoreProperties(value = { "users", "assignments" }, allowSetters = true)
     private Set<StudentClass> classes = new HashSet<>();
 
-    @OneToMany(mappedBy = "appUser")
-    private Set<Question> questions = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "appUser")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

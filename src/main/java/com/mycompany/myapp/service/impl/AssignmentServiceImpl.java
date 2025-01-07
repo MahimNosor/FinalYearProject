@@ -13,6 +13,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.mycompany.myapp.security.SecurityUtils;
+import com.mycompany.myapp.domain.User;
+import com.mycompany.myapp.domain.AppUser;
+import org.springframework.security.access.AccessDeniedException;
+import java.util.HashSet;
+import java.util.List;
+import com.mycompany.myapp.repository.UserRepository;
+import com.mycompany.myapp.repository.AppUserRepository;
+import com.mycompany.myapp.repository.StudentClassRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.mycompany.myapp.security.SecurityUtils;
+import com.mycompany.myapp.domain.StudentClass;
+
 
 /**
  * Service Implementation for managing {@link com.mycompany.myapp.domain.Assignment}.
@@ -29,6 +42,13 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     private final AssignmentSearchRepository assignmentSearchRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private AppUserRepository appUserRepository;
+    @Autowired
+    private StudentClassRepository studentClassRepository;
+
     public AssignmentServiceImpl(
         AssignmentRepository assignmentRepository,
         AssignmentMapper assignmentMapper,
@@ -40,13 +60,46 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     @Override
-    public AssignmentDTO save(AssignmentDTO assignmentDTO) {
-        LOG.debug("Request to save Assignment : {}", assignmentDTO);
-        Assignment assignment = assignmentMapper.toEntity(assignmentDTO);
-        assignment = assignmentRepository.save(assignment);
-        assignmentSearchRepository.index(assignment);
-        return assignmentMapper.toDto(assignment);
+@Transactional
+public AssignmentDTO save(AssignmentDTO assignmentDTO) {
+    LOG.debug("Request to save Assignment : {}", assignmentDTO);
+
+    // Map DTO to entity
+    Assignment assignment = assignmentMapper.toEntity(assignmentDTO);
+
+    // Fetch current user's login
+    String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+        .orElseThrow(() -> new RuntimeException("Current user login not found"));
+
+    // Get the current user
+    User currentUser = userRepository.findOneByLogin(currentUserLogin)
+        .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
+
+    // Get the corresponding AppUser
+    AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
+        .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+
+    // Handle preloaded assignments
+    if (assignmentDTO.getIsPreloaded()) {
+        if (!SecurityUtils.hasCurrentUserThisAuthority("ROLE_ADMIN")) {
+            throw new AccessDeniedException("Only admins can create preloaded assignments");
+        }
+        // Assign preloaded assignments to all classes
+        List<StudentClass> allClasses = studentClassRepository.findAll();
+        assignment.setStudentClasses(new HashSet<>(allClasses));
+    } else {
+        // For non-preloaded assignments, link them to the teacher
+        assignment.setAppUser(appUser);
     }
+
+    // Save the assignment
+    assignment = assignmentRepository.save(assignment);
+    assignmentSearchRepository.index(assignment);
+
+    // Map the saved entity back to DTO
+    return assignmentMapper.toDto(assignment);
+}
+
 
     @Override
     public AssignmentDTO update(AssignmentDTO assignmentDTO) {
@@ -100,4 +153,14 @@ public class AssignmentServiceImpl implements AssignmentService {
         LOG.debug("Request to search for a page of Assignments for query {}", query);
         return assignmentSearchRepository.search(query, pageable).map(assignmentMapper::toDto);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AssignmentDTO> findAllByAppUserId(Long appUserId) {
+        LOG.debug("Request to get all Assignments for AppUser ID: {}", appUserId);
+
+        List<Assignment> assignments = assignmentRepository.findByAppUserId(appUserId);
+        return assignments.stream().map(assignmentMapper::toDto).toList();
+    }
+
 }

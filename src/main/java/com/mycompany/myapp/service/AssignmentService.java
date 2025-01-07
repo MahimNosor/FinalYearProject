@@ -4,7 +4,8 @@ import com.mycompany.myapp.service.dto.AssignmentDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
+import java.util.HashSet;
+import java.util.List;
 /**
  * Service Interface for managing {@link com.mycompany.myapp.domain.Assignment}.
  */
@@ -65,4 +66,7 @@ public interface AssignmentService {
      * @return the list of entities.
      */
     Page<AssignmentDTO> search(String query, Pageable pageable);
+
+    List<AssignmentDTO> findAllByAppUserId(Long appUserId);
+
 }

@@ -16,8 +16,7 @@ import org.springframework.stereotype.Repository;
  * For more information refer to https://github.com/jhipster/generator-jhipster/issues/17990.
  */
 @Repository
-public interface AssignmentRepository
-    extends AssignmentRepositoryWithBagRelationships, JpaRepository<Assignment, Long>, JpaSpecificationExecutor<Assignment> {
+public interface AssignmentRepository extends AssignmentRepositoryWithBagRelationships, JpaRepository<Assignment, Long>, JpaSpecificationExecutor<Assignment> {
     default Optional<Assignment> findOneWithEagerRelationships(Long id) {
         return this.fetchBagRelationships(this.findOneWithToOneRelationships(id));
     }
@@ -41,4 +40,11 @@ public interface AssignmentRepository
 
     @Query("select assignment from Assignment assignment left join fetch assignment.appUser where assignment.id =:id")
     Optional<Assignment> findOneWithToOneRelationships(@Param("id") Long id);
+
+    @Query("SELECT a FROM Assignment a WHERE a.appUser.id = :appUserId")
+    List<Assignment> findByAppUserId(@Param("appUserId") Long appUserId);
+
+    @Query("SELECT a FROM Assignment a WHERE a.isPreloaded = true")
+    List<Assignment> findPreloadedAssignments();
+    
 }

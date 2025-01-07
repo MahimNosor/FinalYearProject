@@ -77,9 +77,7 @@ export default class HomeComponent implements OnInit, OnDestroy {
   }
 
   fetchStudentClasses(): void {
-    this.studentClassService.getClassesForStudent(this.user.id).subscribe(classes => {
-      this.studentClasses = classes;
-    });
+    
   }
 
   fetchAccountDetails(): void {

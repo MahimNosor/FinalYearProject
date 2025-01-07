@@ -26,6 +26,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
 import tech.jhipster.web.util.ResponseUtil;
+import com.mycompany.myapp.repository.UserRepository;
+import com.mycompany.myapp.repository.AppUserRepository;
+import com.mycompany.myapp.repository.StudentClassRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.mycompany.myapp.security.SecurityUtils;
+import com.mycompany.myapp.domain.StudentClass;
+import com.mycompany.myapp.domain.User;
+import com.mycompany.myapp.domain.AppUser;
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.Assignment}.
@@ -47,6 +55,13 @@ public class AssignmentResource {
 
     private final AssignmentQueryService assignmentQueryService;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AppUserRepository appUserRepository;
+
+
     public AssignmentResource(
         AssignmentService assignmentService,
         AssignmentRepository assignmentRepository,
@@ -65,15 +80,28 @@ public class AssignmentResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<AssignmentDTO> createAssignment(@Valid @RequestBody AssignmentDTO assignmentDTO) throws URISyntaxException {
+    public ResponseEntity<AssignmentDTO> createAssignment(@RequestBody AssignmentDTO assignmentDTO) {
         LOG.debug("REST request to save Assignment : {}", assignmentDTO);
-        if (assignmentDTO.getId() != null) {
-            throw new BadRequestAlertException("A new assignment cannot already have an ID", ENTITY_NAME, "idexists");
+
+        // Fetch current user's AppUser ID
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
+
+        User currentUser = userRepository.findOneByLogin(currentUserLogin)
+            .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
+
+        AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
+            .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+
+        // Assign the assignment to the teacher
+        if (appUser.getRoles().contains("ROLE_TEACHER")) {
+        assignmentDTO.setAppUserId(appUser.getId());
         }
-        assignmentDTO = assignmentService.save(assignmentDTO);
-        return ResponseEntity.created(new URI("/api/assignments/" + assignmentDTO.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, assignmentDTO.getId().toString()))
-            .body(assignmentDTO);
+        AssignmentDTO result = assignmentService.save(assignmentDTO);
+        return ResponseEntity
+            .created(new URI("/api/assignments/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "Assignment", result.getId().toString()))
+            .body(result);
     }
 
     /**
@@ -226,4 +254,22 @@ public class AssignmentResource {
             throw ElasticsearchExceptionMapper.mapException(e);
         }
     }
+
+    @GetMapping("/assignments/teacher")
+    public List<AssignmentDTO> getTeacherAssignments() {
+    LOG.debug("REST request to get all assignments for the logged-in teacher");
+
+    // Fetch current user's AppUser ID
+    String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+        .orElseThrow(() -> new RuntimeException("Current user login not found"));
+
+    User currentUser = userRepository.findOneByLogin(currentUserLogin)
+        .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
+
+    AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
+        .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+
+    // Fetch teacher-specific assignments
+    return assignmentService.findAllByAppUserId(appUser.getId());
+}
 }
