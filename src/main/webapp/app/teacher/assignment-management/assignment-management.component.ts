@@ -19,7 +19,7 @@ export class AssignmentManagementComponent implements OnInit {
   }
 
   loadAssignments(): void {
-    this.http.get<any[]>('/api/assignments/teacher').subscribe({
+    this.http.get<any[]>('/api/assignments/teacher/assignments').subscribe({
       next: response => {
         this.assignments = response; // Store fetched assignments
       },

@@ -37,4 +37,8 @@ public interface AppUserRepository extends AppUserRepositoryWithBagRelationships
 
     @Query("SELECT a FROM AppUser a ORDER BY a.points DESC")
     List<AppUser> findAllByOrderByPointsDesc();
+
+    @Query("SELECT appUser FROM AppUser appUser LEFT JOIN FETCH appUser.classes WHERE appUser.user.id = :userId")
+    Optional<AppUser> findOneByUserIdWithClasses(@Param("userId") Long userId);
+
 }

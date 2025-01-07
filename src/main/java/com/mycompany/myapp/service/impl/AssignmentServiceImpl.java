@@ -159,8 +159,9 @@ public AssignmentDTO save(AssignmentDTO assignmentDTO) {
     public List<AssignmentDTO> findAllByAppUserId(Long appUserId) {
         LOG.debug("Request to get all Assignments for AppUser ID: {}", appUserId);
 
-        List<Assignment> assignments = assignmentRepository.findByAppUserId(appUserId);
-        return assignments.stream().map(assignmentMapper::toDto).toList();
+        return assignmentRepository.findByAppUserId(appUserId).stream()
+        .map(assignmentMapper::toDto)
+        .collect(Collectors.toList());
     }
 
 }

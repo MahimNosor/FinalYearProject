@@ -26,6 +26,7 @@ public interface AssignmentMapper extends EntityMapper<AssignmentDTO, Assignment
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
+    @Mapping(target = "classes", ignore = true)
     AppUserDTO toDtoAppUserName(AppUser appUser);
 
     @Named("studentClassClassName")

@@ -70,12 +70,14 @@ public class AssignmentResource {
         AssignmentService assignmentService,
         AssignmentRepository assignmentRepository,
         AssignmentQueryService assignmentQueryService,
-        AppUserMapper appUserMapper
+        AppUserMapper appUserMapper,
+        AppUserRepository appUserRepository
     ) {
         this.assignmentService = assignmentService;
         this.assignmentRepository = assignmentRepository;
         this.assignmentQueryService = assignmentQueryService;
         this.appUserMapper = appUserMapper;
+        this.appUserRepository = appUserRepository;
     }
 
     /**
@@ -93,24 +95,16 @@ public class AssignmentResource {
         String currentUserLogin = SecurityUtils.getCurrentUserLogin()
             .orElseThrow(() -> new RuntimeException("Current user login not found"));
 
-        if (currentUserLogin.equals("admin")) {
-            AssignmentDTO result = assignmentService.save(assignmentDTO);
-            return ResponseEntity
-                .created(new URI("/api/assignments/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "Assignment", result.getId().toString()))
-                .body(result);
-        }
 
         User currentUser = userRepository.findOneByLogin(currentUserLogin)
             .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
 
-        AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
+        AppUser appUser = appUserRepository.findOneByUserIdWithClasses(currentUser.getId())
             .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
 
         // Assign the assignment to the teacher
         if (appUser.getRoles().contains("ROLE_TEACHER")) {
-            AppUserDTO appUserDTO = appUserMapper.toDto(appUser); // Convert AppUser to AppUserDTO
-            assignmentDTO.setAppUser(appUserDTO);
+            assignmentDTO.setAppUser(appUserMapper.toDto(appUser));
         }
         AssignmentDTO result = assignmentService.save(assignmentDTO);
         return ResponseEntity
@@ -270,21 +264,21 @@ public class AssignmentResource {
         }
     }
 
-    @GetMapping("/assignments/teacher")
+    @GetMapping("/teacher/assignments")
     public List<AssignmentDTO> getTeacherAssignments() {
-    LOG.debug("REST request to get all assignments for the logged-in teacher");
+        LOG.debug("REST request to get all assignments for the logged-in teacher");
 
-    // Fetch current user's AppUser ID
-    String currentUserLogin = SecurityUtils.getCurrentUserLogin()
-        .orElseThrow(() -> new RuntimeException("Current user login not found"));
+        // Fetch current user's AppUser ID
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
 
-    User currentUser = userRepository.findOneByLogin(currentUserLogin)
-        .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
+        User currentUser = userRepository.findOneByLogin(currentUserLogin)
+            .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
 
-    AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
-        .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+        AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
+            .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
 
-    // Fetch teacher-specific assignments
-    return assignmentService.findAllByAppUserId(appUser.getId());
-}
+        // Fetch teacher-specific assignments
+        return assignmentService.findAllByAppUserId(appUser.getId());
+    }
 }

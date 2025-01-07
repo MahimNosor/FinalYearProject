@@ -70,6 +70,7 @@ public class StudentClassResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new studentClassDTO, or with status {@code 400 (Bad Request)} if the studentClass has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+    
     @PostMapping("")
     public ResponseEntity<StudentClassDTO> createStudentClass(@Valid @RequestBody StudentClassDTO studentClassDTO)
         throws URISyntaxException {
