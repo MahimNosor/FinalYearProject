@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'jhi-assignment-management',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './assignment-management.component.html',
   styleUrl: './assignment-management.component.scss'
 })

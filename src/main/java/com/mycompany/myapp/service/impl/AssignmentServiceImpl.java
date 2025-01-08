@@ -25,6 +25,7 @@ import com.mycompany.myapp.repository.StudentClassRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.mycompany.myapp.security.SecurityUtils;
 import com.mycompany.myapp.domain.StudentClass;
+import java.util.stream.Collectors;
 
 
 /**
@@ -155,13 +156,12 @@ public AssignmentDTO save(AssignmentDTO assignmentDTO) {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<AssignmentDTO> findAllByAppUserId(Long appUserId) {
-        LOG.debug("Request to get all Assignments for AppUser ID: {}", appUserId);
-
+        LOG.debug("Request to get Assignments for AppUser ID: {}", appUserId);
         return assignmentRepository.findByAppUserId(appUserId).stream()
-        .map(assignmentMapper::toDto)
-        .collect(Collectors.toList());
+            .map(assignmentMapper::toDto)
+            .collect(Collectors.toList());
     }
+
 
 }

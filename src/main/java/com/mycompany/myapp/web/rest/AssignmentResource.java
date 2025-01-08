@@ -265,20 +265,23 @@ public class AssignmentResource {
     }
 
     @GetMapping("/teacher/assignments")
-    public List<AssignmentDTO> getTeacherAssignments() {
-        LOG.debug("REST request to get all assignments for the logged-in teacher");
-
-        // Fetch current user's AppUser ID
+    public ResponseEntity<List<AssignmentDTO>> getTeacherAssignments() {
+        // Fetch current user's login
         String currentUserLogin = SecurityUtils.getCurrentUserLogin()
             .orElseThrow(() -> new RuntimeException("Current user login not found"));
 
+        // Fetch the current user
         User currentUser = userRepository.findOneByLogin(currentUserLogin)
-            .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
+            .orElseThrow(() -> new RuntimeException("User not found for current login"));
 
-        AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
-            .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+        // Fetch the AppUser for the logged-in user
+        AppUser teacher = appUserRepository.findOneByUserId(currentUser.getId())
+            .orElseThrow(() -> new RuntimeException("AppUser not found for current user ID"));
 
-        // Fetch teacher-specific assignments
-        return assignmentService.findAllByAppUserId(appUser.getId());
+        // Fetch assignments created by the teacher
+        List<AssignmentDTO> assignments = assignmentService.findAllByAppUserId(teacher.getId());
+
+        return ResponseEntity.ok(assignments);
     }
+
 }
