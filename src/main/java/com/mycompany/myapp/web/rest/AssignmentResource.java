@@ -87,31 +87,47 @@ public class AssignmentResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new assignmentDTO, or with status {@code 400 (Bad Request)} if the assignment has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("")
-    public ResponseEntity<AssignmentDTO> createAssignment(@RequestBody AssignmentDTO assignmentDTO) throws URISyntaxException {
-        LOG.debug("REST request to save Assignment : {}", assignmentDTO);
+@PostMapping("")
+public ResponseEntity<AssignmentDTO> createAssignment(@Valid @RequestBody AssignmentDTO assignmentDTO) throws URISyntaxException {
+    LOG.debug("REST request to save Assignment : {}", assignmentDTO);
 
-        // Fetch current user's AppUser ID
-        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
-            .orElseThrow(() -> new RuntimeException("Current user login not found"));
+    if (assignmentDTO.getId() != null) {
+        throw new BadRequestAlertException("A new assignment cannot already have an ID", ENTITY_NAME, "idexists");
+    }
 
+    // Get the logged-in user's login
+    String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+        .orElseThrow(() -> new RuntimeException("Current user login not found"));
 
+    if (!"admin".equals(currentUserLogin)) {
+        // For non-admin users, fetch their associated AppUser
         User currentUser = userRepository.findOneByLogin(currentUserLogin)
             .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
 
-        AppUser appUser = appUserRepository.findOneByUserIdWithClasses(currentUser.getId())
+        AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
             .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
 
-        // Assign the assignment to the teacher
+        // Ensure only teachers can create assignments
         if (appUser.getRoles().contains("ROLE_TEACHER")) {
-            assignmentDTO.setAppUser(appUserMapper.toDto(appUser));
+            AppUserDTO appUserDTO = appUserMapper.toDto(appUser);
+            assignmentDTO.setAppUser(appUserDTO);
+        } else {
+            throw new RuntimeException("Only teachers or admin can create assignments");
         }
-        AssignmentDTO result = assignmentService.save(assignmentDTO);
-        return ResponseEntity
-            .created(new URI("/api/assignments/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, "Assignment", result.getId().toString()))
-            .body(result);
+    } else {
+        // Admin: explicitly ensure no AppUser association
+        assignmentDTO.setAppUser(null);
     }
+
+    // Save the assignment
+    assignmentDTO = assignmentService.save(assignmentDTO);
+
+    return ResponseEntity.created(new URI("/api/assignments/" + assignmentDTO.getId()))
+        .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, assignmentDTO.getId().toString()))
+        .body(assignmentDTO);
+}
+
+
 
     /**
      * {@code PUT  /assignments/:id} : Updates an existing assignment.

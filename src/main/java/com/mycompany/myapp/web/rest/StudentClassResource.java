@@ -75,6 +75,7 @@ public class StudentClassResource {
     public ResponseEntity<StudentClassDTO> createStudentClass(@Valid @RequestBody StudentClassDTO studentClassDTO)
         throws URISyntaxException {
         LOG.debug("REST request to save StudentClass : {}", studentClassDTO);
+
         if (studentClassDTO.getId() != null) {
             throw new BadRequestAlertException("A new studentClass cannot already have an ID", ENTITY_NAME, "idexists");
         }
@@ -83,16 +84,19 @@ public class StudentClassResource {
         String currentUserLogin = SecurityUtils.getCurrentUserLogin()
             .orElseThrow(() -> new RuntimeException("Current user login not found"));
 
-        // Fetch the current user's AppUser
-        User currentUser = userRepository.findOneByLogin(currentUserLogin)
-            .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
+        // Check if the current user is the admin
+        if (!"admin".equals(currentUserLogin)) {
+            // Fetch the current user's AppUser
+            User currentUser = userRepository.findOneByLogin(currentUserLogin)
+                .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
 
-        AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
-            .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+            AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
+                .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
 
-        // If the user is a teacher, link the class to their AppUserID
-        if (appUser.getRoles().contains("ROLE_TEACHER")) {
-            studentClassDTO.setAppUserId(appUser.getId());
+            // If the user is a teacher, link the class to their AppUserID
+            if (appUser.getRoles().contains("ROLE_TEACHER")) {
+                studentClassDTO.setAppUserId(appUser.getId());
+            }
         }
 
         studentClassDTO = studentClassService.save(studentClassDTO);
@@ -100,6 +104,7 @@ public class StudentClassResource {
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, studentClassDTO.getId().toString()))
             .body(studentClassDTO);
     }
+
 
     /**
      * {@code PUT  /student-classes/:id} : Updates an existing studentClass.
@@ -226,7 +231,7 @@ public class StudentClassResource {
         }
     }
 
-    @GetMapping("/{studentId}")
+    @GetMapping("/student/{studentId}")
     public List<StudentClassDTO> getStudentClasses(@PathVariable Long studentId) {
         log.debug("REST request to get classes for student: {}", studentId);
         return studentClassService.findClassesByStudentId(studentId);
