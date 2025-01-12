@@ -16,6 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.mycompany.myapp.domain.AppUser;
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * Service Implementation for managing {@link com.mycompany.myapp.domain.StudentClass}.
@@ -52,11 +56,23 @@ public class StudentClassService {
      */
     public StudentClassDTO save(StudentClassDTO studentClassDTO) {
         LOG.debug("Request to save StudentClass : {}", studentClassDTO);
+
+        // Convert DTO to Entity
         StudentClass studentClass = studentClassMapper.toEntity(studentClassDTO);
+
+
+        // Save the StudentClass
         studentClass = studentClassRepository.save(studentClass);
+
+        // Save relationships in the search index (if applicable)
         studentClassSearchRepository.index(studentClass);
+
+        LOG.debug("StudentClass saved successfully with users: {}", studentClass.getUsers());
+
+        // Return the saved entity as DTO
         return studentClassMapper.toDto(studentClass);
     }
+
 
     /**
      * Update a studentClass.
@@ -67,6 +83,7 @@ public class StudentClassService {
     public StudentClassDTO update(StudentClassDTO studentClassDTO) {
         LOG.debug("Request to update StudentClass : {}", studentClassDTO);
         StudentClass studentClass = studentClassMapper.toEntity(studentClassDTO);
+
         studentClass = studentClassRepository.save(studentClass);
         studentClassSearchRepository.index(studentClass);
         return studentClassMapper.toDto(studentClass);
