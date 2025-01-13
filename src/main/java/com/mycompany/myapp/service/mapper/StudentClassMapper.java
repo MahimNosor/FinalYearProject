@@ -20,7 +20,7 @@ public interface StudentClassMapper extends EntityMapper<StudentClassDTO, Studen
     @Mapping(target = "assignments", source = "assignments", qualifiedByName = "assignmentIdSet")
     StudentClassDTO toDto(StudentClass s);
 
-    @Mapping(target = "users", ignore = true)
+    @Mapping(target = "users", source = "users", qualifiedByName = "toEntityAppUserIdSet")
     @Mapping(target = "removeUsers", ignore = true)
     @Mapping(target = "appUser", source = "appUserId")
     @Mapping(target = "assignments", ignore = true)
@@ -37,6 +37,17 @@ public interface StudentClassMapper extends EntityMapper<StudentClassDTO, Studen
         return appUser.stream().map(this::toDtoAppUserId).collect(Collectors.toSet());
     }
 
+    @Named("toEntityAppUserIdSet")
+    default Set<AppUser> toEntityAppUserIdSet(Set<AppUserDTO> appUserDTOs) {
+        return appUserDTOs.stream()
+            .map(this::toEntityAppUserId)
+            .collect(Collectors.toSet());
+    }
+
+    @Named("toEntityAppUserId")
+    @Mapping(target = "id", source = "id")
+    AppUser toEntityAppUserId(AppUserDTO appUserDTO);
+
     // Manual mapping method for Long to AppUser
     default AppUser map(Long value) {
         if (value == null) {
@@ -46,17 +57,19 @@ public interface StudentClassMapper extends EntityMapper<StudentClassDTO, Studen
         appUser.setId(value);
         return appUser;
     }
-        @Named("assignmentId")
+
+    @Named("assignmentId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     AssignmentDTO toDtoAssignmentId(Assignment assignment);
 
-    // Manual mapping method for AppUser to Long
     default Long map(AppUser appUser) {
         return appUser == null ? null : appUser.getId();
     }
-        @Named("assignmentIdSet")
+
+    @Named("assignmentIdSet")
     default Set<AssignmentDTO> toDtoAssignmentIdSet(Set<Assignment> assignment) {
         return assignment.stream().map(this::toDtoAssignmentId).collect(Collectors.toSet());
     }
 }
+

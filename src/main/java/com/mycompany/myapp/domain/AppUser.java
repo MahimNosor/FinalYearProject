@@ -61,7 +61,7 @@ public class AppUser implements Serializable {
     @JoinTable(
         name = "rel_app_user__classes",
         joinColumns = @JoinColumn(name = "app_user_id"),
-        inverseJoinColumns = @JoinColumn(name = "classes_id")
+        inverseJoinColumns = @JoinColumn(name = "student_class_id")
     )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "users", "assignments" }, allowSetters = true)

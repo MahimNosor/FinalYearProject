@@ -16,7 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.mycompany.myapp.domain.AppUser;
+import com.mycompany.myapp.repository.AppUserRepository;
 /**
  * Service Implementation for managing {@link com.mycompany.myapp.domain.StudentClass}.
  */
@@ -28,6 +29,8 @@ public class StudentClassService {
 
     private final StudentClassRepository studentClassRepository;
 
+    private final AppUserRepository appUserRepository;
+
     private final StudentClassMapper studentClassMapper;
 
     private final StudentClassSearchRepository studentClassSearchRepository;
@@ -37,12 +40,15 @@ public class StudentClassService {
     public StudentClassService(
         StudentClassRepository studentClassRepository,
         StudentClassMapper studentClassMapper,
-        StudentClassSearchRepository studentClassSearchRepository
+        StudentClassSearchRepository studentClassSearchRepository,
+        AppUserRepository appUserRepository
     ) {
         this.studentClassRepository = studentClassRepository;
         this.studentClassMapper = studentClassMapper;
         this.studentClassSearchRepository = studentClassSearchRepository;
+        this.appUserRepository = appUserRepository;
     }
+
 
     /**
      * Save a studentClass.
@@ -53,10 +59,25 @@ public class StudentClassService {
     public StudentClassDTO save(StudentClassDTO studentClassDTO) {
         LOG.debug("Request to save StudentClass : {}", studentClassDTO);
         StudentClass studentClass = studentClassMapper.toEntity(studentClassDTO);
+
+        // Save the StudentClass first to get a managed instance
         studentClass = studentClassRepository.save(studentClass);
         studentClassSearchRepository.index(studentClass);
+
+        LOG.debug("Saving StudentClass with appUsers: {}", studentClass.getUsers());
+
+        // Update the owning side (AppUser) after the StudentClass is saved
+        for (AppUser user : studentClass.getUsers()) {
+            user.getClasses().add(studentClass); // Update owning side
+            appUserRepository.save(user); // Save AppUser to persist the relationship
+            LOG.debug("User classes after adding StudentClass: {}", user.getClasses());
+        }
+
         return studentClassMapper.toDto(studentClass);
     }
+
+
+
 
     /**
      * Update a studentClass.
