@@ -48,5 +48,8 @@ public interface AssignmentRepository extends AssignmentRepositoryWithBagRelatio
 
     @Query("SELECT a FROM Assignment a WHERE a.isPreloaded = true")
     List<Assignment> findPreloadedAssignments();
+
+    List<Assignment> findByStudentClasses_Id(Long classId);
+
     
 }

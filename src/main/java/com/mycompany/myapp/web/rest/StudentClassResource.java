@@ -27,6 +27,8 @@ import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 import com.mycompany.myapp.repository.UserRepository;
 import com.mycompany.myapp.domain.User;
+import com.mycompany.myapp.service.dto.AssignmentDTO;
+
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.StudentClass}.
@@ -262,4 +264,10 @@ public class StudentClassResource {
 
         return ResponseEntity.ok(classes);
     }
+
+    @GetMapping("/{id}/assignments")
+    public List<AssignmentDTO> getAssignmentsForClass(@PathVariable Long id) {
+        return studentClassService.findAssignmentsByClassId(id);
+    }
+
 }

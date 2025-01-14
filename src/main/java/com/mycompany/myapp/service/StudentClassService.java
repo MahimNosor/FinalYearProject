@@ -18,6 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.mycompany.myapp.domain.AppUser;
 import com.mycompany.myapp.repository.AppUserRepository;
+import com.mycompany.myapp.repository.AssignmentRepository;
+import com.mycompany.myapp.service.dto.AssignmentDTO;
+import com.mycompany.myapp.service.mapper.AssignmentMapper;
+
+
 /**
  * Service Implementation for managing {@link com.mycompany.myapp.domain.StudentClass}.
  */
@@ -35,18 +40,26 @@ public class StudentClassService {
 
     private final StudentClassSearchRepository studentClassSearchRepository;
 
+    private final AssignmentRepository assignmentRepository;
+
     private final Logger log = LoggerFactory.getLogger(StudentClassService.class);
+
+    private final AssignmentMapper assignmentMapper;
 
     public StudentClassService(
         StudentClassRepository studentClassRepository,
         StudentClassMapper studentClassMapper,
         StudentClassSearchRepository studentClassSearchRepository,
-        AppUserRepository appUserRepository
+        AppUserRepository appUserRepository,
+        AssignmentRepository assignmentRepository,
+        AssignmentMapper assignmentMapper
     ) {
         this.studentClassRepository = studentClassRepository;
         this.studentClassMapper = studentClassMapper;
         this.studentClassSearchRepository = studentClassSearchRepository;
         this.appUserRepository = appUserRepository;
+        this.assignmentRepository = assignmentRepository;
+        this.assignmentMapper = assignmentMapper;
     }
 
 
@@ -193,4 +206,13 @@ public class StudentClassService {
         // Convert entities to DTOs for use in the frontend
         return classes.stream().map(studentClassMapper::toDto).collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<AssignmentDTO> findAssignmentsByClassId(Long classId) {
+        return assignmentRepository.findByStudentClasses_Id(classId)
+            .stream()
+            .map(assignmentMapper::toDto)
+            .toList();
+    }
+
 }

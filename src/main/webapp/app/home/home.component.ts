@@ -91,7 +91,6 @@ export default class HomeComponent implements OnInit, OnDestroy {
   }
 
   navigateToClass(classId: number): void {
-    // TODO: Implement navigation logic here
-    // this.router.navigate(['/class', classId]);
+    this.router.navigate(['/class', classId]);
   }
 }

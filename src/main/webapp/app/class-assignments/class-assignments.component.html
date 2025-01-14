@@ -1,0 +1,22 @@
+<div class="class-detail-container">
+    <h2>Assignments for Class</h2>
+  
+    <!-- Check if there are assignments -->
+    <div *ngIf="assignments.length > 0; else noAssignments">
+      <ul class="assignment-list">
+        <li *ngFor="let assignment of assignments" class="assignment-item">
+          <div class="assignment-content">
+            <h3>{{ assignment.title }}</h3>
+            <p>{{ assignment.description }}</p>
+            
+          </div>
+        </li>
+      </ul>
+    </div>
+  
+    <!-- No Assignments Message -->
+    <ng-template #noAssignments>
+      <p>No assignments available for this class.</p>
+    </ng-template>
+  </div>
+  

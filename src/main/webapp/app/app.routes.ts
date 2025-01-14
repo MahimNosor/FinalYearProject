@@ -8,6 +8,7 @@ import { ClassManagementComponent } from './entities/class-management/class-mana
 import { StudentClassUpdateComponent } from './entities/student-class/update/student-class-update.component';
 import { AssignmentManagementComponent } from './teacher/assignment-management/assignment-management.component';
 import { AssignmentUpdateComponent } from './entities/assignment/update/assignment-update.component';
+import { ClassAssignmentsComponent } from './class-assignments/class-assignments.component';
 const routes: Routes = [
   {
     path: '',
@@ -71,6 +72,11 @@ const routes: Routes = [
     component: AssignmentUpdateComponent,
     canActivate: [UserRouteAccessService],
     data: { authorities: ['ROLE_TEACHER'] },
+  },
+  {
+    path: 'class/:id',
+    component: ClassAssignmentsComponent,
+    canActivate: [UserRouteAccessService],
   },
   ...errorRoute,
 ];
