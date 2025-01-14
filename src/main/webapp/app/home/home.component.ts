@@ -54,9 +54,8 @@ export default class HomeComponent implements OnInit, OnDestroy {
           this.fetchLeaderboard();
 
           // Fetch student classes if the user is a student
-          if (this.isStudent) {
-            this.fetchStudentClasses();
-          }
+          this.fetchStudentClasses();
+          
         }
       });
   }
@@ -77,8 +76,12 @@ export default class HomeComponent implements OnInit, OnDestroy {
   }
 
   fetchStudentClasses(): void {
-    
-  }
+    this.studentClassService.getStudentClasses().subscribe(classes => {
+      this.studentClasses = classes;
+      console.log('Fetched classes:', this.studentClasses); // Debugging
+    });
+  }    
+  
 
   fetchAccountDetails(): void {
     this.http.get<any>('/api/app-users/account').subscribe(accountData => {

@@ -226,11 +226,24 @@ public class StudentClassResource {
         }
     }
 
-    @GetMapping("/{studentId}")
-    public List<StudentClassDTO> getStudentClasses(@PathVariable Long studentId) {
-        log.debug("REST request to get classes for student: {}", studentId);
-        return studentClassService.findClassesByStudentId(studentId);
+    @GetMapping("/student/current")
+    public List<StudentClassDTO> getStudentClassesForLoggedInUser() {
+        // Fetch the current user's login
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
+
+        // Fetch the current user
+        User currentUser = userRepository.findOneByLogin(currentUserLogin)
+            .orElseThrow(() -> new RuntimeException("User not found for login: " + currentUserLogin));
+
+        // Fetch the associated AppUser
+        AppUser appUser = appUserRepository.findOneByUserId(currentUser.getId())
+            .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+
+        // Call the service layer with the AppUser ID
+        return studentClassService.findClassesForStudent(appUser.getId());
     }
+
 
     @GetMapping("/teacher/classes")
     public ResponseEntity<List<StudentClassDTO>> getTeacherClasses() {

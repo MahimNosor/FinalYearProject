@@ -170,10 +170,20 @@ public class StudentClassService {
     }
 
     @Transactional(readOnly = true)
-    public List<StudentClassDTO> findClassesByStudentId(Long studentId) {
-        log.debug("Request to get classes for student ID: {}", studentId);
-        return studentClassRepository.findByUsers_Id(studentId).stream().map(studentClassMapper::toDto).collect(Collectors.toList());
+    public List<StudentClassDTO> findClassesForStudent(Long appUserId) {
+        // Query the repository to fetch student classes linked to the AppUser ID
+        return studentClassRepository.findByUsers_Id(appUserId)
+            .stream()
+            .map(studentClass -> {
+                // Map each StudentClass entity to a DTO
+                StudentClassDTO dto = new StudentClassDTO();
+                dto.setId(studentClass.getId());
+                dto.setClassName(studentClass.getClassName());
+                return dto;
+            })
+            .toList();
     }
+
 
     @Transactional(readOnly = true)
     public List<StudentClassDTO> getClassesByTeacher(Long teacherAppUserId) {

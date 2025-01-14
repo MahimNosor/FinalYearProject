@@ -19,5 +19,5 @@ public interface StudentClassRepository extends JpaRepository<StudentClass, Long
     @Query("SELECT sc FROM StudentClass sc WHERE sc.appUser.id = :appUserId")
     List<StudentClass> findByAppUserId(@Param("appUserId") Long appUserId);
 
-    List<StudentClass> findByUsers_Id(Long userId);
+    List<StudentClass> findByUsers_Id(Long appUserId);
 }

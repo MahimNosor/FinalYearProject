@@ -35,14 +35,20 @@
     </div>
 
     <!-- Student-Specific Content -->
-    <div *ngIf="isStudent">
-      <h3>Your Classes</h3>
-      <ul>
-        <li *ngFor="let classItem of studentClasses">
-          <a [routerLink]="['/class', classItem.id]">{{ classItem.className }}</a>
-        </li>
-      </ul>
+    <div *ngIf="isStudent" class="classes-section">
+      <h3 class="classes-title">Your Classes</h3>
+      <div class="classes-list">
+        <div *ngFor="let classItem of studentClasses" class="class-card">
+          <a [routerLink]="['/class', classItem.id]" class="class-link">
+            <div class="class-card-body">
+              <h4 class="class-name">{{ classItem.className }}</h4>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
+
+    
 
     <!-- Teacher-Specific Note -->
     <div *ngIf="isTeacher">

@@ -88,4 +88,9 @@ export class StudentClassService {
     }
     return studentClassCollection;
   }
+
+  getStudentClasses(): Observable<any[]> {
+    return this.http.get<any[]>('/api/student-classes/student/current');
+  }
+  
 }
