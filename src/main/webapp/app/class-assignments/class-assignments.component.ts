@@ -3,11 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { AssignmentService } from 'app/entities/assignment/service/assignment.service';
 import { IAssignment } from 'app/entities/assignment/assignment.model';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'jhi-class-assignments',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './class-assignments.component.html',
   styleUrl: './class-assignments.component.scss'
 })
