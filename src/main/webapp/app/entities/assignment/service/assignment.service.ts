@@ -90,4 +90,9 @@ export class AssignmentService {
   getAssignmentsByClass(classId: number): Observable<IAssignment[]> {
     return this.http.get<IAssignment[]>(`api/student-classes/${classId}/assignments`);
   }
+
+  getAssignmentById(id: number): Observable<IAssignment> {
+    return this.http.get<IAssignment>(`${this.resourceUrl}/${id}`);
+}
+
 }

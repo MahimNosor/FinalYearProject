@@ -1,1 +1,15 @@
-<p>assignment-details works!</p>
+<div *ngIf="assignment; else loading" class="assignment-details">
+  <h1>{{ assignment.title }}</h1>
+  <div class="separator"></div>
+
+  <p><strong>Description:</strong> {{ assignment.description }}</p>
+  <p><strong>Difficulty:</strong> {{ assignment.difficulty }}</p>
+  <p><strong>Programming Language:</strong> {{ assignment.language }}</p>
+  <p><strong>Maximum Score:</strong> {{ assignment.maxScore }}</p>
+</div>
+
+<ng-template #loading>
+  <div class="loading">
+    <p>Loading assignment details...</p>
+  </div>
+</ng-template>
