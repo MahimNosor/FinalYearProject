@@ -5,6 +5,7 @@ import { IAssignment } from 'app/entities/assignment/assignment.model';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import * as ace from 'ace-builds';
 
 @Component({
@@ -18,10 +19,12 @@ export class AssignmentDetailsComponent implements OnInit {
   assignment: IAssignment | null = null; // Stores assignment details
   editor: ace.Ace.Editor | null = null; // Ace Editor instance
   selectedLanguage: string = 'javascript'; // Default language
+  submissionResult: any = null;
 
   constructor(
     private route: ActivatedRoute,
-    private assignmentService: AssignmentService
+    private assignmentService: AssignmentService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -87,5 +90,42 @@ export class AssignmentDetailsComponent implements OnInit {
       cpp: 'c_cpp',
     };
     return languageMap[language.toLowerCase()] || 'text';
+  }
+
+  submitCode(): void {
+    if (!this.editor) {
+      console.error('Editor is not initialized');
+      return;
+    }
+
+    const code = this.editor.getValue(); // Get code from the editor
+    const language = this.assignment?.language?.toLowerCase() || 'javascript'; // Get language
+    const payload = {
+      source_code: code,
+      language_id: this.mapLanguageToJudge0(language),
+      stdin: '', // Input if required
+    };
+
+    this.http.post('https://api.judge0.com/submissions', payload).subscribe({
+      next: (response) => {
+        this.submissionResult = response; // Display response in the UI
+      },
+      error: (err) => {
+        console.error('Error submitting code:', err);
+      },
+    });
+  }
+
+  // Map languages to Judge0 language IDs
+  mapLanguageToJudge0(language: string): number {
+    const languageMap: { [key: string]: number } = {
+      javascript: 63,
+      python: 71,
+      java: 62,
+      c: 50,
+      cpp: 54,
+      csharp: 51,
+    };
+    return languageMap[language] || 63; // Default to JavaScript
   }
 }
