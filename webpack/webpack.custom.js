@@ -130,7 +130,17 @@ module.exports = async (config, options, targetOptions) => {
   );
 
   config = merge(
-    config,
+    config, {
+      module: {
+        rules: [
+          {
+            test: /\.css$/,
+            use: ['style-loader', 'css-loader'],
+            include: path.resolve(__dirname, '../node_modules/monaco-editor'), // Apply only to Monaco Editor
+          },
+        ]
+      }
+    }
     // jhipster-needle-add-webpack-config - JHipster will add custom config
   );
 
