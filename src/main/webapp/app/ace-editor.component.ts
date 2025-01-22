@@ -1,6 +1,8 @@
 import { Component, ElementRef, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import * as ace from 'ace-builds';
 
+ace.config.set("basePath", "node_modules/ace-builds/src-noconflict");
+
 @Component({
   selector: 'app-ace-editor',
   template: `
