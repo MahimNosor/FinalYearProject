@@ -1,15 +1,19 @@
 <div class="assignment-details">
   <!-- Assignment Details -->
   <div *ngIf="assignment">
+    
     <h1>{{ assignment.title }}</h1>
-    <p><strong>Description:</strong> {{ assignment.description }}</p>
+    <p><strong>Difficulty:</strong> {{ assignment?.difficulty }}</p>
+    <p class="description-title"><strong>Description:</strong></p>
+    <div [innerHTML]="formattedDescription" class="description-content"></div>
     <p><strong>Programming Language:</strong> {{ assignment.language }}</p>
   </div>
+
 
   <!-- Language Selector -->
   <div class="language-selector">
     <label for="language">Select Language:</label>
-    <select id="language" [(ngModel)]="selectedLanguage" >
+    <select id="language" [(ngModel)]="selectedLanguage">
       <option value="javascript">JavaScript</option>
       <option value="python">Python</option>
       <option value="java">Java</option>
@@ -24,16 +28,13 @@
   <div id="editor-container" style="height: 600px; border: 1px solid #ccc;"></div>
 
   <!-- Submit Button -->
-  <button 
-  (click)="submitCodeToJudge0()">
-  Submit Code
-</button>
+  <button (click)="submitCodeToJudge0()">Submit Code</button>
 
-
-<div *ngIf="submissionResult">
-  <h3>Submission Result</h3>
-  <p><strong>Test Case Passed:</strong> {{ submissionResult.passed }}</p>
-  <p><strong>Actual Output:</strong> {{ submissionResult.actualOutput }}</p>
-  <p><strong>Expected Output:</strong> {{ submissionResult.expectedOutput }}</p>
+  <!-- Submission Results -->
+  <div *ngIf="submissionResult">
+    <h3>Submission Result</h3>
+    <p><strong>Test Case Passed:</strong> {{ submissionResult.passed }}</p>
+    <p><strong>Actual Output:</strong> {{ submissionResult.actualOutput }}</p>
+    <p><strong>Expected Output:</strong> {{ submissionResult.expectedOutput }}</p>
+  </div>
 </div>
-

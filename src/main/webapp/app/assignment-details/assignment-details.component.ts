@@ -25,6 +25,8 @@ export class AssignmentDetailsComponent implements OnInit {
   submissionResult: any = null;
   baseUrl: string = 'https://judge0-ce.p.rapidapi.com';
   testCase: { input: string; expectedOutput: string } | null = null;
+  formattedDescription: string = '';
+
 
 
   constructor(
@@ -38,6 +40,14 @@ export class AssignmentDetailsComponent implements OnInit {
     this.assignmentService.getAssignmentById(id).subscribe({
       next: (data) => {
         this.assignment = data;
+        this.formattedDescription = this.assignment.description
+        ? this.assignment.description.replace(/\n/g, '<br>') // Replace newlines with <br>
+        : '';
+
+        // Ensure no redundant "Description:" text in the formatted content
+        if (this.formattedDescription.startsWith('Description:')) {
+          this.formattedDescription = this.formattedDescription.replace('Description:', '').trim();
+        }
         try {
           if (this.assignment.testCases) {
             console.log('Raw testCases:', this.assignment.testCases);
@@ -60,7 +70,6 @@ export class AssignmentDetailsComponent implements OnInit {
           console.error('Error parsing test cases:', err);
           this.testCase = null; // Fallback if parsing fails
         }
-        
       },
       error: (err) => {
         console.error('Error fetching assignment:', err);
@@ -131,7 +140,7 @@ export class AssignmentDetailsComponent implements OnInit {
         return;
       }
     
-      const sourceCode = this.editor?.getValue().replace(/^"|"$/g, '').trim();
+      const sourceCode = this.editor?.getValue()
  // Get the raw editor content without wrapping quotes
       const languageId = this.mapLanguageToJudge0(this.selectedLanguage || 'javascript');
     
