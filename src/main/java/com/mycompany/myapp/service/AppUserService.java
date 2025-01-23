@@ -238,4 +238,20 @@ public class AppUserService {
         String login = authentication.getName();
         return appUserRepository.findByUser_Login(login);
     }
+
+    @Transactional
+    public void addPointsToUser(Authentication authentication, int pointsToAdd) {
+        log.debug("Adding {} points to the current user", pointsToAdd);
+        Optional<AppUser> appUserOptional = getCurrentUser(authentication);
+
+        if (appUserOptional.isPresent()) {
+            AppUser appUser = appUserOptional.get();
+            appUser.setPoints(appUser.getPoints() + pointsToAdd); // Increment points
+            appUserRepository.save(appUser);
+            log.info("Updated points for user {}: {}", appUser.getUser().getLogin(), appUser.getPoints());
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+
 }

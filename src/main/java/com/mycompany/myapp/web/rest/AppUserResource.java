@@ -231,4 +231,12 @@ public class AppUserResource {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/add-points")
+    public ResponseEntity<Void> addPoints(@RequestParam("points") int points, Authentication authentication) {
+        LOG.debug("REST request to add points: {}", points);
+        appUserService.addPointsToUser(authentication, points);
+        return ResponseEntity.ok().build();
+    }
+
 }

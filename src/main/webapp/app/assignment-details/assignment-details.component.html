@@ -3,7 +3,7 @@
   <div *ngIf="assignment">
     
     <h1>{{ assignment.title }}</h1>
-    <p><strong>Difficulty:</strong> {{ assignment?.difficulty }}</p>
+    <p><strong>Difficulty:</strong> {{ assignment.difficulty }}</p>
     <p class="description-title"><strong>Description:</strong></p>
     <div [innerHTML]="formattedDescription" class="description-content"></div>
     <p><strong>Programming Language:</strong> {{ assignment.language }}</p>

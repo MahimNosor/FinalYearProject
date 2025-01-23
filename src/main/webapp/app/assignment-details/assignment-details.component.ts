@@ -189,18 +189,18 @@ export class AssignmentDetailsComponent implements OnInit {
           const actualOutput = result.stdout?.trim();
           const expectedOutput = this.testCase.expectedOutput.trim();
     
-          if (actualOutput === expectedOutput) {
-            console.log('Test case passed!');
-            // Proceed to update user points (next step)
-          } else {
-            console.log('Test case failed.');
-          }
-    
           this.submissionResult = {
             passed: actualOutput === expectedOutput,
             actualOutput,
             expectedOutput,
           };
+    
+          if (this.submissionResult.passed) {
+            console.log('Test case passed!');
+            this.updateUserPoints(this.assignment?.maxScore || 0); // Update points
+          } else {
+            console.log('Test case failed.');
+          }
         },
         error: (err) => {
           console.error('Error fetching submission result:', err);
@@ -208,6 +208,18 @@ export class AssignmentDetailsComponent implements OnInit {
       });
     }
     
+    updateUserPoints(maxScore: number): void {
+      const apiUrl = `/api/app-users/add-points?points=${maxScore}`; // Use maxScore as points in the query string
+      
+      this.http.post(apiUrl, {}).subscribe({
+        next: () => {
+          console.log(`Successfully added ${maxScore} points to the user.`);
+        },
+        error: (err) => {
+          console.error('Error adding points to user:', err);
+        },
+      });
+    }
     
     
 
