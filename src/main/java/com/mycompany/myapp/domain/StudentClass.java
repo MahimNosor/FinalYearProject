@@ -42,7 +42,7 @@ public class StudentClass implements Serializable {
     @JoinColumn(name = "app_user_id", nullable = true)
     private AppUser appUser;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "studentClasses")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "studentClasses", cascade = CascadeType.REMOVE)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @org.springframework.data.annotation.Transient
     @JsonIgnoreProperties(value = { "appUser", "studentClasses", "userQuestions" }, allowSetters = true)
