@@ -17,6 +17,7 @@
         <td>{{ i + 1 }}</td>
         <td>{{ classItem.className }}</td>
         <td>
+          <button (click)="editClass(classItem)" class="btn btn-warning">Edit</button>
           <button (click)="deleteClass(classItem.id)" class="btn btn-danger">Delete</button>
         </td>
       </tr>

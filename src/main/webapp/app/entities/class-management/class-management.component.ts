@@ -35,6 +35,11 @@ export class ClassManagementComponent implements OnInit {
     });
   }
 
+  editClass(classItem: any): void {
+    this.router.navigate(['student-class', classItem.id, 'edit']);
+  }
+  
+
   deleteClass(classId: number): void {
     if (confirm('Are you sure you want to delete this class?')) {
       this.http.delete(`/api/student-classes/${classId}`).subscribe({
