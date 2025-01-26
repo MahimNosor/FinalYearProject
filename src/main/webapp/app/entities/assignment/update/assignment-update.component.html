@@ -143,21 +143,22 @@
             formControlName="appUser"
             [compareWith]="compareAppUser"
           >
-            @if (editForm.get(['appUser'])!.value == null) {
-              <option [ngValue]="null" selected></option>
-            }
-            @for (appUserOption of appUsersSharedCollection; track $index) {
-              <option [ngValue]="appUserOption">{{ appUserOption.name }}</option>
-            }
+            <option *ngIf="editForm.get(['appUser'])!.value == null" [ngValue]="null" selected></option>
+            <option *ngFor="let appUserOption of appUsersSharedCollection; trackBy: trackByFn" [ngValue]="appUserOption">
+              {{ appUserOption.name }}
+            </option>
           </select>
         </div>
-        @if (editForm.get(['appUser'])!.invalid && (editForm.get(['appUser'])!.dirty || editForm.get(['appUser'])!.touched)) {
-          <div>
-            @if (editForm.get(['appUser'])?.errors?.required) {
-              <small class="form-text text-danger" jhiTranslate="entity.validation.required">This field is required.</small>
-            }
-          </div>
-        }
+        <div *ngIf="editForm.get(['appUser'])!.invalid && (editForm.get(['appUser'])!.dirty || editForm.get(['appUser'])!.touched)">
+          <small
+            *ngIf="editForm.get(['appUser'])?.errors?.required"
+            class="form-text text-danger"
+            jhiTranslate="entity.validation.required"
+          >
+            This field is required.
+          </small>
+        </div>
+        
 
         <div class="mb-3">
           <label for="field_studentClasses" jhiTranslate="finalYearProjectApp.assignment.studentClasses">Student Classes</label>

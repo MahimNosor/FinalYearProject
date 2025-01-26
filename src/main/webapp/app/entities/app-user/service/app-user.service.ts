@@ -89,4 +89,9 @@ export class AppUserService {
   getLeaderboard(): Observable<any[]> {
     return this.http.get<any[]>(`${this.resourceUrl}/leaderboard`);
   }
+
+  getCurrentAppUser(): Observable<IAppUser> {
+    return this.http.get<IAppUser>(`${this.resourceUrl}/current-app-user`);
+}
+
 }

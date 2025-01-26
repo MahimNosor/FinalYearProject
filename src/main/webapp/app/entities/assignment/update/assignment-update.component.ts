@@ -58,8 +58,14 @@ export class AssignmentUpdateComponent implements OnInit {
 
     this.accountService.identity().subscribe(account => {
       this.isAdmin = account?.authorities?.includes('ROLE_ADMIN') ?? false;
-      console.log('Is Admin:', this.isAdmin); // Debug to verify role
-    });
+
+      if (!this.isAdmin) {
+          // For non-admins (teachers), fetch the current AppUser
+          this.appUserService.getCurrentAppUser().subscribe(appUser => {
+              this.editForm.patchValue({ appUser }); // Preselect the logged-in AppUser
+          });
+      }
+  });
 
     this.activatedRoute.data.subscribe(({ assignment }) => {
       console.log('Resolved Assignment for Teacher:', assignment);
@@ -158,4 +164,9 @@ export class AssignmentUpdateComponent implements OnInit {
       )
       .subscribe((studentClasses: IStudentClass[]) => (this.studentClassesSharedCollection = studentClasses));
   }
+
+  trackByFn(index: number, item: any): any {
+    return item.id; // Assuming `id` is the unique identifier for appUserOption
+}
+
 }

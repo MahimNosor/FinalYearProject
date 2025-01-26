@@ -26,6 +26,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
+import com.mycompany.myapp.security.SecurityUtils;
+
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.AppUser}.
@@ -244,5 +246,20 @@ public class AppUserResource {
         LOG.debug("REST request to get leaderboard for class ID: {}", classId);
         return appUserService.getClassLeaderboard(classId);
     }
+
+    @GetMapping("/current-app-user")
+    public ResponseEntity<AppUserDTO> getCurrentAppUser() {
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
+
+        AppUser appUser = appUserRepository.findOneByUserIdWithClasses(
+            userRepository.findOneByLogin(currentUserLogin)
+                .orElseThrow(() -> new RuntimeException("User not found"))
+                .getId()
+        ).orElseThrow(() -> new RuntimeException("AppUser not found"));
+
+        return ResponseEntity.ok(appUserMapper.toDto(appUser));
+    }
+
 
 }

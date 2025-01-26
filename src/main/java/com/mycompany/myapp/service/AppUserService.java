@@ -262,5 +262,4 @@ public class AppUserService {
             .map(appUserMapper::toDto) // Map entities to DTOs
             .collect(Collectors.toList());
     }
-
 }
