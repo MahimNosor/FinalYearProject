@@ -85,6 +85,12 @@ const routes: Routes = [
     component: AssignmentDetailsComponent,
     canActivate: [UserRouteAccessService],
   },
+  {
+    path: 'teacher/assignment-management/:id/edit',
+    component: AssignmentUpdateComponent,
+    canActivate: [UserRouteAccessService],
+    data: { authorities: ['ROLE_TEACHER'] },
+  },
   ...errorRoute,
 ];
 export default routes;

@@ -36,7 +36,7 @@ export class AssignmentManagementComponent implements OnInit {
 
   editAssignment(assignment: any): void {
     if (!assignment.isPreloaded) {
-      this.router.navigate(['/teacher/assignment-management', assignment.id, 'edit']);
+      this.router.navigate(['assignment', assignment.id, 'edit']);
     } else {
       alert('Preloaded assignments cannot be edited.');
     }

@@ -62,6 +62,7 @@ export class AssignmentUpdateComponent implements OnInit {
     });
 
     this.activatedRoute.data.subscribe(({ assignment }) => {
+      console.log('Resolved Assignment for Teacher:', assignment);
       this.assignment = assignment;
       if (assignment) {
         this.updateForm(assignment);
