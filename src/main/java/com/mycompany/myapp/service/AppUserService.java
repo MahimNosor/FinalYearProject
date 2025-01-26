@@ -254,4 +254,13 @@ public class AppUserService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<AppUserDTO> getClassLeaderboard(Long classId) {
+        log.debug("Fetching leaderboard for class ID: {}", classId);
+        return appUserRepository.findByClassIdOrderByPointsDesc(classId)
+            .stream()
+            .map(appUserMapper::toDto) // Map entities to DTOs
+            .collect(Collectors.toList());
+    }
+
 }

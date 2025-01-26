@@ -1,34 +1,92 @@
 .class-detail-container {
-    margin-top: 20px;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .assignment-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .assignment-item {
-    margin-bottom: 16px;
-    padding: 16px;
-    background: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .assignment-content h3 {
-    margin: 0 0 8px;
-    font-size: 1.5rem;
-    color: #007bff;
-  }
-  
-  .assignment-content p {
-    margin: 4px 0;
-    font-size: 1rem;
-    color: #333;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px; /* Space between assignments and leaderboard */
+  margin-top: 20px;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.assignments-section,
+.leaderboard-section {
+  flex: 1; /* Equal width for both sections */
+  max-width: 50%; /* Prevent sections from exceeding half the width */
+}
+
+.assignments-section h2,
+.leaderboard-section h2 {
+  text-align: center; /* Center-align section titles */
+  font-size: 1.5rem;
+  color: #3498db;
+  margin-bottom: 16px; /* Add space below titles */
+}
+
+.assignment-list {
+  list-style: none;
+  padding: 0;
+}
+
+.assignment-item {
+  margin-bottom: 16px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.assignment-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.assignment-content a {
+  text-decoration: none;
+  font-size: 1rem;
+  color: #007bff;
+  font-weight: bold;
+}
+
+.leaderboard-section {
+  text-align: center; /* Align title and table content centrally */
+  border: 1px solid #ddd; /* Add border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 16px; /* Padding inside border */
+  background: #ffffff; /* Match background to assignments */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.leaderboard-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.leaderboard-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard-section th,
+.leaderboard-section td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.leaderboard-section th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.leaderboard-section tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.leaderboard-section tr:hover {
+  background-color: #f1f1f1;
+}

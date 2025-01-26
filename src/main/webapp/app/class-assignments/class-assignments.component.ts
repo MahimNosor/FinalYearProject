@@ -4,6 +4,7 @@ import { AssignmentService } from 'app/entities/assignment/service/assignment.se
 import { IAssignment } from 'app/entities/assignment/assignment.model';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-class-assignments',
@@ -15,8 +16,9 @@ import { RouterModule } from '@angular/router';
 export class ClassAssignmentsComponent {
   classId: number | null = null; // To store the current class ID
   assignments: IAssignment[] = []; // Array to store the assignments
+  classLeaderboard: any[] = [];
 
-  constructor(private route: ActivatedRoute, private assignmentService: AssignmentService) {}
+  constructor(private route: ActivatedRoute, private assignmentService: AssignmentService, private http: HttpClient) {}
 
   ngOnInit(): void {
     // Extract the classId from the route
@@ -24,6 +26,7 @@ export class ClassAssignmentsComponent {
       this.classId = +params['id'];
       if (this.classId) {
         this.loadAssignments(this.classId);
+        this.getClassLeaderboard(this.classId);
       }
     });
   }
@@ -34,4 +37,19 @@ export class ClassAssignmentsComponent {
       this.assignments = data;
     });
   }
+
+  getClassLeaderboard(classId: number): void {
+    const apiUrl = `/api/app-users/leaderboard/class/${classId}`;
+    this.http.get<any[]>(apiUrl).subscribe({
+      next: (data: any[]) => {
+        this.classLeaderboard = data; // Store leaderboard data
+        console.log('Class Leaderboard:', this.classLeaderboard);
+      },
+      error: (err: any) => {
+        console.error('Error fetching class leaderboard:', err);
+      },
+    });
+  }
+  
+  
 }

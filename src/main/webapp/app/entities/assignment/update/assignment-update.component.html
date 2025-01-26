@@ -121,7 +121,7 @@
           }
         </div>
 
-        <div class="mb-3">
+        <div *ngIf="isAdmin" class="mb-3">
           <label class="form-label" for="field_isPreloaded" jhiTranslate="finalYearProjectApp.assignment.isPreloaded">Is Preloaded</label>
           <input
             type="checkbox"

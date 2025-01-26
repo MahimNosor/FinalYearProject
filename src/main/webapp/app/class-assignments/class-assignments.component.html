@@ -1,4 +1,5 @@
 <div class="class-detail-container">
+  <div class="assignments-section">
     <h2>Assignments for Class</h2>
   
     <!-- Check if there are assignments -->
@@ -6,9 +7,7 @@
       <ul class="assignment-list">
         <li *ngFor="let assignment of assignments" class="assignment-item">
           <div class="assignment-content">
-            <a [routerLink]="['/assignment', assignment.id]">{{ assignment.title }}
-              
-            </a>
+            <a [routerLink]="['/assignment', assignment.id]">{{ assignment.title }}</a>
           </div>
         </li>
       </ul>
@@ -19,4 +18,24 @@
       <p>No assignments available for this class.</p>
     </ng-template>
   </div>
-  
+
+  <div class="leaderboard-section">
+    <h2>Class Leaderboard</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of classLeaderboard; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.points }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

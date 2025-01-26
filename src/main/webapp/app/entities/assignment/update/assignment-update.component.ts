@@ -19,7 +19,7 @@ import { ProgrammingLanguage } from 'app/entities/enumerations/programming-langu
 import { AssignmentService } from '../service/assignment.service';
 import { IAssignment } from '../assignment.model';
 import { AssignmentFormGroup, AssignmentFormService } from './assignment-form.service';
-
+import { AccountService } from 'app/core/auth/account.service';
 @Component({
   standalone: true,
   selector: 'jhi-assignment-update',
@@ -34,6 +34,7 @@ export class AssignmentUpdateComponent implements OnInit {
 
   appUsersSharedCollection: IAppUser[] = [];
   studentClassesSharedCollection: IStudentClass[] = [];
+  isAdmin = false;
 
   protected dataUtils = inject(DataUtils);
   protected eventManager = inject(EventManager);
@@ -42,6 +43,8 @@ export class AssignmentUpdateComponent implements OnInit {
   protected appUserService = inject(AppUserService);
   protected studentClassService = inject(StudentClassService);
   protected activatedRoute = inject(ActivatedRoute);
+  protected accountService = inject(AccountService);
+
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: AssignmentFormGroup = this.assignmentFormService.createAssignmentFormGroup();
@@ -52,6 +55,12 @@ export class AssignmentUpdateComponent implements OnInit {
     this.studentClassService.compareStudentClass(o1, o2);
 
   ngOnInit(): void {
+
+    this.accountService.identity().subscribe(account => {
+      this.isAdmin = account?.authorities?.includes('ROLE_ADMIN') ?? false;
+      console.log('Is Admin:', this.isAdmin); // Debug to verify role
+    });
+
     this.activatedRoute.data.subscribe(({ assignment }) => {
       this.assignment = assignment;
       if (assignment) {

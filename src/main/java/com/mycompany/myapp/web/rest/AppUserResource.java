@@ -239,4 +239,10 @@ public class AppUserResource {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/leaderboard/class/{classId}")
+    public List<AppUserDTO> getClassLeaderboard(@PathVariable Long classId) {
+        LOG.debug("REST request to get leaderboard for class ID: {}", classId);
+        return appUserService.getClassLeaderboard(classId);
+    }
+
 }

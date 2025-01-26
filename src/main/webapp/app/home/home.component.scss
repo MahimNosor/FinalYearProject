@@ -23,22 +23,56 @@ Main page styles
 }
 
 .leaderboard-box {
-  border: 1px solid #ddd; // Light border for the box
-  border-radius: 8px; // Rounded corners for better visual appeal
-  padding: 16px; // Padding inside the box to give space for content
-  background-color: #f9f9f9; // Light background color to differentiate
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Soft shadow to lift the box off the page
-  margin-top: 24px; // Top margin to give spacing from other content
+  border: 1px solid #ddd; /* Light border for the leaderboard box */
+  border-radius: 8px; /* Rounded corners */
+  padding: 16px; /* Padding inside the box */
+  background-color: #ffffff; /* White background for consistency */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for a lifted appearance */
+  text-align: center; /* Center-align content inside the box */
+  margin-top: 24px; /* Add spacing from other content */
+}
+
+.leaderboard-box h3 {
+  font-size: 1.5rem; /* Consistent font size for leaderboard titles */
+  font-weight: bold;
+  color: #3498db; /* Blue color for the title */
+  margin-bottom: 16px; /* Spacing below the title */
+}
+
+.leaderboard-box ul {
+  list-style: none; /* Remove bullet points */
+  padding: 0;
+  margin: 0;
 }
 
 .leaderboard-item {
-  padding: 8px 0; // Spacing between leaderboard items
-  border-bottom: 1px solid #e0e0e0; // Separator between items
+  padding: 12px 0; /* Add vertical spacing between items */
+  border-bottom: 1px solid #ddd; /* Separator between leaderboard entries */
+  font-size: 1rem; /* Adjust font size for readability */
+  display: flex; /* Flexbox for alignment */
+  justify-content: space-between; /* Space out name and points */
+  align-items: center; /* Align items vertically */
 }
 
 .leaderboard-item:last-child {
-  border-bottom: none; // Remove the bottom border for the last item
+  border-bottom: none; /* Remove border for the last item */
 }
+
+.leaderboard-item strong {
+  font-weight: bold; /* Emphasize the user name */
+  color: #333; /* Dark text color */
+}
+
+.leaderboard-item span {
+  font-size: 0.9rem; /* Slightly smaller font for points */
+  color: #555; /* Secondary text color for points */
+}
+
+.leaderboard-box:hover {
+  transform: translateY(-5px); /* Slight lift on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* More prominent shadow on hover */
+}
+
 
 /* ==========================================================================
 Classes Section Styles
