@@ -1,19 +1,22 @@
 <div class="dashboard">
   <h1>Teacher Dashboard</h1>
-  <div class="stats">
+
+  <div class="metrics">
     <div class="card">
       <h3>Total Classes</h3>
-      <p>{{ stats.totalClasses }}</p>
+      <p>{{ metrics.totalClasses }}</p>
     </div>
     <div class="card">
-      <h3>Active Questions</h3>
-      <p>{{ stats.activeQuestions }}</p>
+      <h3>Total Assignments</h3>
+      <p>{{ metrics.totalAssignments }}</p>
     </div>
     <div class="card">
-      <h3>Pending Submissions</h3>
-      <p>{{ stats.pendingSubmissions }}</p>
+      <h3>Total Students</h3>
+      <p>{{ metrics.totalStudents }}</p>
     </div>
   </div>
+
+
 
   <div class="actions">
     <button class="btn btn-primary" (click)="navigateToAssignmentManagement()">Create or Manage Assignments</button>

@@ -25,6 +25,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.HashMap;
+import java.util.Map;
+import com.mycompany.myapp.repository.AssignmentRepository;
+
 
 /**
  * Service Implementation for managing {@link com.mycompany.myapp.domain.AppUser}.
@@ -46,6 +50,7 @@ public class AppUserService {
     private final StudentClassRepository studentClassRepository;
     private final QuestionRepository questionRepository;
     private final UserQuestionRepository userQuestionRepository;
+    private final AssignmentRepository assignmentRepository;
 
     private final Logger log = LoggerFactory.getLogger(AppUserService.class);
 
@@ -56,7 +61,8 @@ public class AppUserService {
         UserRepository userRepository,
         StudentClassRepository studentClassRepository,
         QuestionRepository questionRepository,
-        UserQuestionRepository userQuestionRepository
+        UserQuestionRepository userQuestionRepository,
+        AssignmentRepository assignmentRepository
     ) {
         this.appUserRepository = appUserRepository;
         this.appUserMapper = appUserMapper;
@@ -65,6 +71,7 @@ public class AppUserService {
         this.studentClassRepository = studentClassRepository;
         this.questionRepository = questionRepository;
         this.userQuestionRepository = userQuestionRepository;
+        this.assignmentRepository = assignmentRepository;
     }
 
     /**
@@ -262,4 +269,14 @@ public class AppUserService {
             .map(appUserMapper::toDto) // Map entities to DTOs
             .collect(Collectors.toList());
     }
+
+    public Map<String, Integer> getTeacherDashboardMetrics(Long teacherId) {
+        Map<String, Integer> metrics = new HashMap<>();
+        metrics.put("totalClasses", studentClassRepository.countByTeacherId(teacherId));
+        metrics.put("totalAssignments", assignmentRepository.countByAppUserId(teacherId));
+        metrics.put("totalStudents", studentClassRepository.countTotalStudentsByTeacherId(teacherId));
+        LOG.info("Metrics returned for teacher {}: {}", teacherId, metrics);
+        return metrics;
+    }
+
 }

@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
 import com.mycompany.myapp.security.SecurityUtils;
-
+import java.util.Map;
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.AppUser}.
@@ -260,6 +260,17 @@ public class AppUserResource {
 
         return ResponseEntity.ok(appUserMapper.toDto(appUser));
     }
+    @GetMapping("/teacher-dashboard/metrics")
+    public ResponseEntity<Map<String, Integer>> getTeacherDashboardMetrics() {
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
 
+        AppUser teacher = appUserRepository.findByUser_Login(currentUserLogin)
+            .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+
+        Map<String, Integer> metrics = appUserService.getTeacherDashboardMetrics(teacher.getId());
+        
+        return ResponseEntity.ok(metrics);
+    }
 
 }

@@ -13,11 +13,19 @@ import org.springframework.stereotype.Repository;
 @SuppressWarnings("unused")
 @Repository
 public interface StudentClassRepository extends JpaRepository<StudentClass, Long> {
-    @Query("SELECT COUNT(sc) FROM StudentClass sc JOIN sc.users u WHERE u.roles = 'ROLE_TEACHER' AND u.id = :teacherId")
-    int countByTeacherId(@Param("teacherId") Long teacherId);
+
 
     @Query("SELECT sc FROM StudentClass sc WHERE sc.appUser.id = :appUserId")
     List<StudentClass> findByAppUserId(@Param("appUserId") Long appUserId);
 
     List<StudentClass> findByUsers_Id(Long appUserId);
+
+    @Query("SELECT COUNT(sc) FROM StudentClass sc WHERE sc.appUser.id = :teacherId")
+    int countByTeacherId(@Param("teacherId") Long teacherId);
+
+    @Query("SELECT COUNT(DISTINCT u.id) " +
+        "FROM StudentClass sc " +
+        "JOIN sc.users u " +
+        "WHERE sc.appUser.id = :teacherId")
+    int countTotalStudentsByTeacherId(@Param("teacherId") Long teacherId);
 }

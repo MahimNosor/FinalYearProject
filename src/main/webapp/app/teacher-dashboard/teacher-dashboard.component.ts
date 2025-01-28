@@ -11,19 +11,20 @@ import { Router } from '@angular/router';
   styleUrl: './teacher-dashboard.component.scss',
 })
 export class TeacherDashboardComponent implements OnInit {
-  stats = {
+  metrics: { totalClasses: number; totalAssignments: number; totalStudents: number } = {
     totalClasses: 0,
-    activeQuestions: 0,
-    pendingSubmissions: 0,
+    totalAssignments: 0,
+    totalStudents: 0,
   };
 
   constructor(
     private appUserService: AppUserService,
     private router: Router,
+    private teacherDashboardService: TeacherDashboardService
   ) {}
 
   ngOnInit(): void {
-    this.loadDashboardStats();
+    this.loadMetrics();
   }
 
   navigateToAssignmentManagement(): void {
@@ -34,9 +35,16 @@ export class TeacherDashboardComponent implements OnInit {
     this.router.navigate(['class-management']);
   }
 
-  private loadDashboardStats(): void {
-    this.appUserService.getDashboardStats().subscribe(data => {
-      this.stats = data;
+  private loadMetrics(): void {
+    this.teacherDashboardService.getMetrics().subscribe({
+      next: data => {
+        this.metrics = data; // Assign fetched metrics data
+        console.log('Metrics from API:', this.metrics);
+
+      },
+      error: err => {
+        console.error('Error fetching dashboard metrics:', err); // Log error
+      },
     });
   }
 }

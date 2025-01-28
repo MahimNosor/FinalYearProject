@@ -51,5 +51,8 @@ public interface AssignmentRepository extends AssignmentRepositoryWithBagRelatio
 
     List<Assignment> findByStudentClasses_Id(Long classId);
 
-    
+    @Query("SELECT COUNT(a) FROM Assignment a WHERE a.appUser.id = :teacherId")
+    int countByAppUserId(@Param("teacherId") Long teacherId);
+
+
 }

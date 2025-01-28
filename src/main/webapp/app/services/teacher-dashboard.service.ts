@@ -6,11 +6,14 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class TeacherDashboardService {
-  private apiUrl = '/api/teacher-dashboard/stats';
+  private apiUrl = '/api/app-users/teacher-dashboard/metrics';
 
   constructor(private http: HttpClient) {}
 
-  getDashboardStats(): Observable<any> {
-    return this.http.get(this.apiUrl);
-  }
+  /**
+   * Fetch teacher dashboard metrics
+   */
+    getMetrics(): Observable<any> {
+      return this.http.get(this.apiUrl);
+    }
 }
