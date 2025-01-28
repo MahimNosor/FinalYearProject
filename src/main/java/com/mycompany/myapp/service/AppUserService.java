@@ -279,4 +279,17 @@ public class AppUserService {
         return metrics;
     }
 
+    @Transactional(readOnly = true)
+    public List<AppUserDTO> getDistinctStudentsForTeacher(Long teacherId) {
+        LOG.debug("Fetching distinct students for teacher ID: {}", teacherId);
+
+        // Fetch distinct students from repository
+        List<AppUser> students = studentClassRepository.findDistinctStudentsByTeacherId(teacherId);
+
+        // Map the AppUser entities to DTOs
+        return students.stream()
+            .map(appUserMapper::toDto)
+            .collect(Collectors.toList());
+    }
+
 }

@@ -273,4 +273,21 @@ public class AppUserResource {
         return ResponseEntity.ok(metrics);
     }
 
+    @GetMapping("/teacher-dashboard/students")
+    public ResponseEntity<List<AppUserDTO>> getDistinctStudentsForTeacher() {
+        LOG.debug("REST request to get distinct students for the logged-in teacher");
+
+        // Fetch the current logged-in teacher
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
+
+        AppUser teacher = appUserRepository.findByUser_Login(currentUserLogin)
+            .orElseThrow(() -> new RuntimeException("Teacher not found for the current user"));
+
+        // Call the service method to get distinct students
+        List<AppUserDTO> students = appUserService.getDistinctStudentsForTeacher(teacher.getId());
+
+        return ResponseEntity.ok(students);
+    }
+
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import com.mycompany.myapp.domain.AppUser;
 
 /**
  * Spring Data JPA repository for the StudentClass entity.
@@ -28,4 +29,8 @@ public interface StudentClassRepository extends JpaRepository<StudentClass, Long
         "JOIN sc.users u " +
         "WHERE sc.appUser.id = :teacherId")
     int countTotalStudentsByTeacherId(@Param("teacherId") Long teacherId);
+
+    @Query("SELECT DISTINCT u FROM StudentClass sc JOIN sc.users u WHERE sc.appUser.id = :teacherId")
+    List<AppUser> findDistinctStudentsByTeacherId(@Param("teacherId") Long teacherId);
+
 }

@@ -17,6 +17,8 @@ export class TeacherDashboardComponent implements OnInit {
     totalStudents: 0,
   };
 
+  students: any[] = [];
+
   constructor(
     private appUserService: AppUserService,
     private router: Router,
@@ -44,6 +46,18 @@ export class TeacherDashboardComponent implements OnInit {
       },
       error: err => {
         console.error('Error fetching dashboard metrics:', err); // Log error
+      },
+    });
+  }
+
+  private loadStudents(): void {
+    this.teacherDashboardService.getDistinctStudents().subscribe({
+      next: data => {
+        this.students = data; // Assign fetched students data
+        console.log('Distinct students from API:', this.students);
+      },
+      error: err => {
+        console.error('Error fetching distinct students:', err); // Log error
       },
     });
   }

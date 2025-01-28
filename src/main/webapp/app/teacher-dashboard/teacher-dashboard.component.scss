@@ -39,6 +39,40 @@
     }
   }
 
+  .students-section {
+    margin-top: 2rem;
+
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .students-list {
+      max-height: 200px; /* Set a max height for the scrollable list */
+      overflow-y: auto; /* Enable vertical scrolling */
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+      background-color: #fff;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+
+        li {
+          padding: 0.5rem 0;
+          border-bottom: 1px solid #f0f0f0;
+
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+  }
+
+
   .actions {
     display: flex;
     justify-content: center;
