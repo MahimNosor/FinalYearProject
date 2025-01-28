@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { AppUserService } from '../entities/app-user/service/app-user.service';
 import { TeacherDashboardService } from 'app/services/teacher-dashboard.service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'jhi-teacher-dashboard',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './teacher-dashboard.component.html',
   styleUrl: './teacher-dashboard.component.scss',
 })
@@ -27,6 +28,7 @@ export class TeacherDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadMetrics();
+    this.loadStudents();
   }
 
   navigateToAssignmentManagement(): void {
