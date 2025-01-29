@@ -201,12 +201,40 @@ export class AssignmentDetailsComponent implements OnInit {
           } else {
             console.log('Test case failed.');
           }
+          this.storeUserSubmission(this.submissionResult.passed);
         },
         error: (err) => {
           console.error('Error fetching submission result:', err);
         },
       });
     }
+
+    storeUserSubmission(passed: boolean): void {
+      if (!this.assignment || !this.assignment.id) {
+          console.error('Error: Assignment data is missing or invalid.');
+          return;
+      }
+  
+      const submissionData = {
+          assignment: { id: this.assignment.id }, // Send assignment object instead of just ID
+          status: passed ? 'APPROVED' : 'REJECTED',
+      };
+  
+      console.log('Submitting:', submissionData); // Debugging log
+  
+      this.http.post('/api/user-questions/submit', submissionData).subscribe({
+          next: () => {
+              console.log('Submission recorded in UserQuestion table.');
+          },
+          error: (err) => {
+              console.error('Error storing submission:', err);
+          },
+      });
+  }
+  
+  
+  
+
     
     updateUserPoints(maxScore: number): void {
       const apiUrl = `/api/app-users/add-points?points=${maxScore}`; // Use maxScore as points in the query string

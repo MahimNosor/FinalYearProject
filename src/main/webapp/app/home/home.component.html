@@ -1,71 +1,95 @@
-<div class="row">
-  <div class="col-md-3">
-    <span class="hipster img-fluid rounded"></span>
-  </div>
-
-  <div class="col-md-6">
-    <!-- Default Welcome Message for Non-Logged-In Users -->
-    <div *ngIf="!account">
-      <h1 class="display-4"><span>Welcome to ClassCode!</span></h1>
-      <p class="lead">
-        ClassCode is a gamified learning platform designed to help students enhance their programming skills through engaging challenges and
-        guided practice. Teachers can create assignments, track progress, and foster an interactive learning environment.
-      </p>
-
-      <!-- Non-Logged-In User Alerts -->
-      <div class="alert alert-warning">
-        <span>If you want to </span>
-        <a class="alert-link" (click)="login()">sign in</a>,
-        <span>
-          you can use the default accounts:<br />- Administrator (login="admin" and password="admin") <br />- User (login="user" and
-          password="user").
-        </span>
-      </div>
-
-      <div class="alert alert-warning">
-        <span>You don't have an account yet?</span>&nbsp;
-        <a class="alert-link" routerLink="/account/register">Register a new account</a>
-      </div>
-      <p>Get started by exploring your classes, assignments, and the leaderboard to track your progress!</p>
+<div class="container">
+  <div class="row">
+    <!-- Left Section: Avatar -->
+    <div class="col-md-3">
+      <span class="hipster img-fluid rounded"></span>
     </div>
 
-    <!-- Content for Logged-In Users -->
-    <div *ngIf="account">
-      <p class="lead" style="font-size: 2.5rem; font-weight: bold">Hello, {{ account.login }}!</p>
-    </div>
+    <!-- Center Section: Student & Teacher Content -->
+    <div class="col-md-6">
+      <!-- Default Welcome Message for Non-Logged-In Users -->
+      <div *ngIf="!account">
+        <h1 class="display-4"><span>Welcome to ClassCode!</span></h1>
+        <p class="lead">
+          ClassCode is a gamified learning platform designed to help students enhance their programming skills through engaging challenges and
+          guided practice. Teachers can create assignments, track progress, and foster an interactive learning environment.
+        </p>
 
-    <!-- Student-Specific Content -->
-    <div *ngIf="isStudent" class="classes-section">
-      <h3 class="classes-title">Your Classes</h3>
-      <div class="classes-list">
-        <div *ngFor="let classItem of studentClasses" class="class-card">
-          <a [routerLink]="['/class', classItem.id]" class="class-link">
-            <div class="class-card-body">
-              <h4 class="class-name">{{ classItem.className }}</h4>
-            </div>
-          </a>
+        <!-- Non-Logged-In User Alerts -->
+        <div class="alert alert-warning">
+          <span>If you want to </span>
+          <a class="alert-link" (click)="login()">sign in</a>,
+          <span>
+            you can use the default accounts:<br />- Administrator (login="admin" and password="admin") <br />- User (login="user" and
+            password="user").
+          </span>
+        </div>
+
+        <div class="alert alert-warning">
+          <span>You don't have an account yet?</span>&nbsp;
+          <a class="alert-link" routerLink="/account/register">Register a new account</a>
+        </div>
+        <p>Get started by exploring your classes, assignments, and the leaderboard to track your progress!</p>
+      </div>
+
+      <!-- Content for Logged-In Users -->
+      <div *ngIf="account">
+        <p class="lead" style="font-size: 2.5rem; font-weight: bold">Hello, {{ account.login }}!</p>
+      </div>
+
+      <!-- Student-Specific Content -->
+      <div *ngIf="isStudent" class="classes-section">
+        <h3 class="classes-title">Your Classes</h3>
+        <div class="classes-list">
+          <div *ngFor="let classItem of studentClasses" class="class-card">
+            <a [routerLink]="['/class', classItem.id]" class="class-link">
+              <div class="class-card-body">
+                <h4 class="class-name">{{ classItem.className }}</h4>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Student Submissions -->
+        <div class="submissions-section">
+          <h3 class="submissions-title">Your Submissions</h3>
+          <div class="submissions-list">
+            <ul>
+              <li *ngFor="let submission of submissions" class="submission-item">
+                <div>
+                    <strong>{{ submission.assignmentTitle || 'Unknown Assignment' }}</strong>
+                </div>
+                <div>
+                    Date: {{ submission.submissionDate | date:'short' }}
+                </div>
+                <div>
+                    Status: 
+                    <span [ngClass]="{ 'approved': submission.status === 'APPROVED', 'rejected': submission.status === 'REJECTED' }">
+                        {{ submission.status }}
+                    </span>
+                </div>
+            </li>          
+            </ul>
+          </div>
         </div>
       </div>
+
+      <!-- Teacher-Specific Content -->
+      <div *ngIf="isTeacher">
+        <p>You can manage your classes and assignments in the Teacher Dashboard, accessible via the navigation bar.</p>
+      </div>
     </div>
 
-    
-
-    <!-- Teacher-Specific Note -->
-    <div *ngIf="isTeacher">
-      <p>You can manage your classes and assignments in the Teacher Dashboard, accessible via the navigation bar.</p>
-    </div>
-  </div>
-
-  <!-- Leaderboard Section to the Right -->
-  <div class="col-md-3 d-flex justify-content-end">
-    <div *ngIf="leaderboard && leaderboard.length > 0" class="leaderboard-box">
-      <h3>Global Leaderboard</h3>
-      <ul>
-        <li *ngFor="let user of leaderboard" class="leaderboard-item">
-          <strong>{{ user.name }}</strong
-          >: {{ user.points }} points
-        </li>
-      </ul>
+    <!-- Leaderboard Section: Now Correctly Positioned on the Right -->
+    <div class="col-md-3 d-flex justify-content-end">
+      <div *ngIf="leaderboard && leaderboard.length > 0" class="leaderboard-box">
+        <h3>Global Leaderboard</h3>
+        <ul>
+          <li *ngFor="let user of leaderboard" class="leaderboard-item">
+            <strong>{{ user.name }}</strong>: {{ user.points }} points
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

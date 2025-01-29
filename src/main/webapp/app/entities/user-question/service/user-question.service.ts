@@ -137,4 +137,9 @@ export class UserQuestionService {
       body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
     });
   }
+
+  getStudentSubmissions(): Observable<IUserQuestion[]> {
+    return this.http.get<IUserQuestion[]>(`/api/user-questions`);
+}
+
 }

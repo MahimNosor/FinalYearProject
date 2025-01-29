@@ -135,5 +135,53 @@ Classes Section Styles
   text-decoration: underline;
 }
 
+.submissions-section {
+  margin-top: 2rem;
+
+  .submissions-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .submissions-list {
+    max-height: 250px; /* Scrollable area */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+
+      .submission-item {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        div {
+          font-size: 0.9rem;
+          color: #555;
+        }
+
+        .approved {
+          color: #28a745; /* Green for approved */
+          font-weight: bold;
+        }
+
+        .rejected {
+          color: #dc3545; /* Red for rejected */
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
 
 

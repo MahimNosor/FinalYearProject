@@ -17,6 +17,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.ResponseUtil;
+import com.mycompany.myapp.security.SecurityUtils;
+import com.mycompany.myapp.domain.AppUser;
+import com.mycompany.myapp.repository.AppUserRepository;
+import com.mycompany.myapp.domain.UserQuestion;
+import com.mycompany.myapp.domain.Assignment;
+import com.mycompany.myapp.repository.AssignmentRepository;
+import com.mycompany.myapp.domain.enumeration.SubmissionStatus;
+
+import java.time.Instant;
+
 
 /**
  * REST controller for managing {@link com.mycompany.myapp.domain.UserQuestion}.
@@ -36,9 +46,17 @@ public class UserQuestionResource {
 
     private final UserQuestionRepository userQuestionRepository;
 
-    public UserQuestionResource(UserQuestionService userQuestionService, UserQuestionRepository userQuestionRepository) {
+    private final AppUserRepository appUserRepository;
+
+    private final AssignmentRepository assignmentRepository;
+
+    
+
+    public UserQuestionResource(UserQuestionService userQuestionService, UserQuestionRepository userQuestionRepository, AppUserRepository appUserRepository, AssignmentRepository assignmentRepository) {
         this.userQuestionService = userQuestionService;
         this.userQuestionRepository = userQuestionRepository;
+        this.appUserRepository = appUserRepository;
+        this.assignmentRepository = assignmentRepository;
     }
 
     /**
@@ -183,5 +201,47 @@ public class UserQuestionResource {
         } catch (RuntimeException e) {
             throw ElasticsearchExceptionMapper.mapException(e);
         }
+    }
+
+    @GetMapping("/user-questions")
+    public ResponseEntity<List<UserQuestionDTO>> getStudentSubmissions() {
+        String currentUserLogin = SecurityUtils.getCurrentUserLogin()
+            .orElseThrow(() -> new RuntimeException("Current user login not found"));
+
+        AppUser student = appUserRepository.findByUser_Login(currentUserLogin)
+            .orElseThrow(() -> new RuntimeException("AppUser not found for current user"));
+
+        List<UserQuestionDTO> submissions = userQuestionService.findByAppUserId(student.getId());
+
+        return ResponseEntity.ok(submissions);
+    }
+
+    @PostMapping("/submit")
+    public ResponseEntity<UserQuestion> submitUserQuestion(@RequestBody UserQuestionDTO submissionDTO) {
+        Optional<AppUser> appUserOpt = appUserRepository.findByUser_Login(
+            SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new RuntimeException("Current user login not found"))
+        );
+
+        if (appUserOpt.isEmpty()) {
+            throw new RuntimeException("AppUser not found for current user");
+        }
+
+        AppUser appUser = appUserOpt.get();
+        UserQuestion userQuestion = new UserQuestion();
+        userQuestion.setAppUser(appUser);
+        Assignment assignment = assignmentRepository.findById(submissionDTO.getAssignment().getId())
+            .orElseThrow(() -> new RuntimeException("Assignment not found"));
+
+        userQuestion.setAssignment(assignment);
+        userQuestion.setSubmissionDate(Instant.now());
+        if (submissionDTO.getStatus() == SubmissionStatus.APPROVED) {
+            userQuestion.setStatus(SubmissionStatus.APPROVED);
+        } else {
+            userQuestion.setStatus(SubmissionStatus.REJECTED);
+        }
+
+
+        userQuestionRepository.save(userQuestion);
+        return ResponseEntity.ok(userQuestion);
     }
 }

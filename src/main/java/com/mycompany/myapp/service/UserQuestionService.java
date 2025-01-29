@@ -30,6 +30,9 @@ public class UserQuestionService {
 
     private final UserQuestionSearchRepository userQuestionSearchRepository;
 
+    private final Logger log = LoggerFactory.getLogger(UserQuestionService.class);
+
+
     public UserQuestionService(
         UserQuestionRepository userQuestionRepository,
         UserQuestionMapper userQuestionMapper,
@@ -143,4 +146,16 @@ public class UserQuestionService {
             throw e;
         }
     }
+
+    @Transactional(readOnly = true)
+    public List<UserQuestionDTO> findByAppUserId(Long appUserId) {
+        log.debug("Fetching UserQuestion submissions for AppUser ID: {}", appUserId);
+        
+        List<UserQuestion> userQuestions = userQuestionRepository.findByAppUserIdOrderBySubmissionDateDesc(appUserId);
+        
+        return userQuestions.stream()
+            .map(userQuestionMapper::toDto)
+            .collect(Collectors.toList());
+    }
+
 }

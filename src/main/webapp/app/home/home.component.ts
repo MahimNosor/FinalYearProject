@@ -10,6 +10,8 @@ import { Account } from 'app/core/auth/account.model';
 import { AppUserService } from '../../app/entities/app-user/service/app-user.service';
 import { StudentClassService } from '../../app/entities/student-class/service/student-class.service';
 import { HttpClient } from '@angular/common/http';
+import { UserQuestionService } from 'app/entities/user-question/service/user-question.service';
+import { AssignmentService } from 'app/entities/assignment/service/assignment.service';
 
 @Component({
   standalone: true,
@@ -26,6 +28,7 @@ export default class HomeComponent implements OnInit, OnDestroy {
   studentClasses: any[] = [];
   isStudent = false;
   isTeacher = false;
+  submissions: any[] = [];
 
   // Private instance fields
   private readonly destroy$ = new Subject<void>();
@@ -36,6 +39,8 @@ export default class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private appUserService: AppUserService,
     private studentClassService: StudentClassService,
+    private userQuestionService: UserQuestionService,
+    private assignmentService: AssignmentService
   ) {}
 
   ngOnInit(): void {
@@ -55,7 +60,7 @@ export default class HomeComponent implements OnInit, OnDestroy {
 
           // Fetch student classes if the user is a student
           this.fetchStudentClasses();
-          
+          this.fetchStudentSubmissions();
         }
       });
   }
@@ -93,4 +98,31 @@ export default class HomeComponent implements OnInit, OnDestroy {
   navigateToClass(classId: number): void {
     this.router.navigate(['/class', classId]);
   }
+
+  fetchStudentSubmissions(): void {
+    this.userQuestionService.getStudentSubmissions().subscribe(submissions => {
+        this.submissions = submissions.reverse(); // Reverse order for latest submissions first
+
+        this.submissions.forEach(submission => {
+            if (submission.assignment && submission.assignment.id) {
+                this.assignmentService.getAssignmentById(submission.assignment.id).subscribe(
+                    assignment => {
+                        submission.assignmentTitle = assignment.title || 'Unknown Assignment';
+                    },
+                    error => {
+                        console.error('Error fetching assignment title:', error);
+                        submission.assignmentTitle = 'Unknown Assignment';
+                    }
+                );
+            } else {
+                submission.assignmentTitle = 'Unknown Assignment';
+            }
+        });
+
+        console.log('Updated Submissions with Titles:', this.submissions); // Debugging
+    });
+}
+
+
+
 }
